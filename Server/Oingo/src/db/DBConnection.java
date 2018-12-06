@@ -1,6 +1,9 @@
 package db;
 
 
+import bean.User;
+
+import java.util.List;
 
 public interface DBConnection {
 	/**
@@ -17,7 +20,7 @@ public interface DBConnection {
 	 * @param password
 	 * @return boolean
 	 */
-	public boolean verifyLogin(String userId, String password);
+	public int verifyLogin(String userId, String password);
 
 	/**
 	 * Add a new user into database
@@ -28,5 +31,7 @@ public interface DBConnection {
 	 * @return
 	 */
 	public boolean addUser(String userName, String password, String email);
+
+	public List<User> getFriendList(int uid);
 
 }

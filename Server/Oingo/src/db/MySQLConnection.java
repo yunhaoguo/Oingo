@@ -1,7 +1,11 @@
 package db;
 
 
+import bean.User;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySQLConnection implements DBConnection{
 
@@ -30,25 +34,25 @@ public class MySQLConnection implements DBConnection{
 
 
 	@Override
-	public boolean verifyLogin(String userName, String password) {
+	public int verifyLogin(String userName, String password) {
         if (conn == null) {
-            return false;
+            return -1;
         }
         try {
-            String sql = "SELECT * FROM User WHERE binary uname = ? AND binary upassword = ?";
+            String sql = "SELECT uid FROM User WHERE binary uname = ? AND binary upassword = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, userName);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return true;
+                return rs.getInt(1);
             } else {
-                return false;
+                return -1;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return -1;
     }
 
     @Override
@@ -75,5 +79,30 @@ public class MySQLConnection implements DBConnection{
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<User> getFriendList(int uid) {
+        List<User> friendList = new ArrayList<>();
+        if (conn == null) {
+            return friendList;
+        }
+        try {
+            String sql = "SELECT * FROM User, Friendship WHERE User.uid = Friendship.fuid and Friendship.uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setUid(rs.getInt(1));
+                user.setUemail(rs.getString(2));
+                user.setUname(rs.getString(3));
+                user.setUstate(rs.getString(5));
+                friendList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return friendList;
     }
 }

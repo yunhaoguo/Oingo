@@ -13,4 +13,5 @@ public class HttpUtils {
     public static final String INITIAL_URL = "http://10.0.2.2:8080/";
     public static final String LOGIN_URL = INITIAL_URL + "login";
     public static final String REGISTER_URL = INITIAL_URL + "register";
+    public static final String GET_FRIENDLIST_URL = INITIAL_URL + "friends";
 }

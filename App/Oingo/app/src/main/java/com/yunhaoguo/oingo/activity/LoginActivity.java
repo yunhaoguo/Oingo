@@ -14,18 +14,15 @@ import android.widget.Toast;
 
 import com.yunhaoguo.oingo.MainActivity;
 import com.yunhaoguo.oingo.R;
-import com.yunhaoguo.oingo.utils.HttpUtils;
+import com.yunhaoguo.oingo.utils.QueryUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
@@ -81,29 +78,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(LoginActivity.this, "Wrong username or password!", Toast.LENGTH_SHORT).show();
             return;
         }
-        OkHttpClient client = new OkHttpClient();
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("userName", name);
-            obj.put("password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
-        Request request = new Request.Builder().url(HttpUtils.LOGIN_URL).post(requestBody).build();
-        Response response = null;
-        client.newCall(request).enqueue(new Callback() {
+
+        QueryUtils.verify(name, password, new Callback() {
             @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
+            public void onFailure(Call call, IOException e) {
 
             }
-
             @Override
-            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 try {
                     JSONObject responseObj = new JSONObject(response.body().string());
-                    if (responseObj.getString("result").equals("SUCCESS")) {
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    int uid = responseObj.getInt("result");
+                    if (uid != -1) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("uid", uid);
+                        startActivity(intent);
                         finish();
                     } else {
                         runOnUiThread(new Runnable() {

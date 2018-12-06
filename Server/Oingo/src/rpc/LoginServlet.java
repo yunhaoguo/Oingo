@@ -35,11 +35,8 @@ public class LoginServlet extends HttpServlet {
             JSONObject input = RpcHelper.readJSONObject(request);
             String userName = input.getString("userName");
             String password = input.getString("password");
-            if (connection.verifyLogin(userName, password)) {
-                RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
-            } else {
-                RpcHelper.writeJsonObject(response, new JSONObject().put("result", "FAIL"));
-            }
+            int uid = connection.verifyLogin(userName, password);
+            RpcHelper.writeJsonObject(response, new JSONObject().put("result", uid));
 
         } catch (Exception e) {
             e.printStackTrace();
