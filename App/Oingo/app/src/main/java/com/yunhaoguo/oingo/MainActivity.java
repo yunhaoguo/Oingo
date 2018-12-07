@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.yunhaoguo.oingo.fragment.FriendsFragment;
 import com.yunhaoguo.oingo.fragment.NotesFragment;
+import com.yunhaoguo.oingo.utils.AccountUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int uid = intent.getIntExtra("uid", -1);
+        AccountUtils.setUid(uid);
         mTitles = new ArrayList<>();
         mTitles.add("Notes");
         mTitles.add("Friends");

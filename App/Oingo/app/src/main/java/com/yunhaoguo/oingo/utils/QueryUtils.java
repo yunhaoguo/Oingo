@@ -64,4 +64,16 @@ public class QueryUtils {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void getNotesList(Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("is_filter", false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.GET_NOTESLIST_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
 }

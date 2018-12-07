@@ -1,6 +1,7 @@
 package db;
 
 
+import bean.Note;
 import bean.User;
 
 import java.util.List;
@@ -32,6 +33,16 @@ public interface DBConnection {
 	 */
 	public boolean addUser(String userName, String password, String email);
 
+
+	/**
+	 * Get all friends of a specific user
+	 * return the user list
+	 * @param uid
+	 * @return
+	 */
 	public List<User> getFriendList(int uid);
+
+
+	public List<Note> getAllNoteList();
 
 }

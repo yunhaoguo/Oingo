@@ -10,11 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yunhaoguo.oingo.R;
 import com.yunhaoguo.oingo.adapter.NoteListAdapter;
+import com.yunhaoguo.oingo.entity.Note;
+import com.yunhaoguo.oingo.utils.QueryUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /*
  * 项目名:     Oingo
@@ -28,9 +40,13 @@ import java.util.List;
 
 public class NotesFragment extends Fragment {
 
-    private List<String> noteList;
+    private List<Note> noteList = new ArrayList<>();
+
+    private NoteListAdapter noteListAdapter;
 
     private RecyclerView rvNoteList;
+
+
 
     @Nullable
     @Override
@@ -42,15 +58,39 @@ public class NotesFragment extends Fragment {
     }
 
     private void initData() {
-        noteList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            noteList.add("item" + i);
-        }
+        QueryUtils.getNotesList(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject responseObj = new JSONObject(response.body().string());
+                    Gson gson = new Gson();
+                    final List<Note> noteList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<Note>>() {
+                    }.getType());
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            noteListAdapter.updateData(noteList);
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void initView(View view) {
         rvNoteList = view.findViewById(R.id.rv_note_list);
         rvNoteList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        rvNoteList.setAdapter(new NoteListAdapter(noteList));
+        noteListAdapter = new NoteListAdapter(noteList);
+        rvNoteList.setAdapter(noteListAdapter);
+
+
     }
 }

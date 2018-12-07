@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yunhaoguo.oingo.R;
+import com.yunhaoguo.oingo.entity.Note;
 
 import java.util.List;
 
@@ -22,13 +23,13 @@ import java.util.List;
 
 public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private List<Note> mData;
 
-    public NoteListAdapter(List<String> data) {
+    public NoteListAdapter(List<Note> data) {
         this.mData = data;
     }
 
-    public void updateData(List<String> data) {
+    public void updateData(List<Note> data) {
         this.mData = data;
         notifyDataSetChanged();
     }
@@ -42,7 +43,9 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTv.setText(mData.get(position));
+        holder.tvNoteContent.setText(mData.get(position).getNcontent());
+        holder.tvFrom.setText(mData.get(position).getUname());
+        holder.tvDate.setText(mData.get(position).getStartTime());
     }
 
     @Override
@@ -52,11 +55,15 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mTv;
+        TextView tvNoteContent;
+        TextView tvFrom;
+        TextView tvDate;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mTv = itemView.findViewById(R.id.tv_note_item);
+            tvNoteContent = itemView.findViewById(R.id.tv_note_item);
+            tvFrom = itemView.findViewById(R.id.tv_from);
+            tvDate = itemView.findViewById(R.id.tv_start_date);
         }
     }
 

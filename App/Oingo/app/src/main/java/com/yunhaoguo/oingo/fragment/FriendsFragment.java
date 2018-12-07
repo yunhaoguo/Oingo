@@ -1,5 +1,6 @@
 package com.yunhaoguo.oingo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,10 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yunhaoguo.oingo.R;
+import com.yunhaoguo.oingo.activity.FriendRequestsActivity;
 import com.yunhaoguo.oingo.adapter.FriendListAdapter;
 import com.yunhaoguo.oingo.entity.User;
 import com.yunhaoguo.oingo.utils.QueryUtils;
@@ -46,6 +49,8 @@ public class FriendsFragment extends Fragment {
 
     private FriendListAdapter friendListAdapter;
 
+    private TextView tvFriendRequests;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,9 +63,16 @@ public class FriendsFragment extends Fragment {
     private void initView(View view) {
         rvFriendList = view.findViewById(R.id.rv_friend_list);
         rvFriendList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        friendNameList.add("a");
         friendListAdapter = new FriendListAdapter(friendNameList);
         rvFriendList.setAdapter(friendListAdapter);
+
+        tvFriendRequests = view.findViewById(R.id.tv_friend_requests);
+        tvFriendRequests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), FriendRequestsActivity.class));
+            }
+        });
     }
 
     private void initData() {
@@ -79,11 +91,17 @@ public class FriendsFragment extends Fragment {
                         Gson gson = new Gson();
                         List<User> friendList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<User>>() {
                         }.getType());
-                        List<String> tmp = new ArrayList<>();
+                        final List<String> tmp = new ArrayList<>();
                         for (User user: friendList) {
                             tmp.add(user.getUname());
                         }
-                        friendListAdapter.updateData(tmp);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                friendListAdapter.updateData(tmp);
+                            }
+                        });
+
 
 
                     } catch (JSONException e) {

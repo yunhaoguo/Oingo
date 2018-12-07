@@ -1,7 +1,9 @@
 package db;
 
 
+import bean.Note;
 import bean.User;
+import utils.DateUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -104,5 +106,33 @@ public class MySQLConnection implements DBConnection{
             e.printStackTrace();
         }
         return friendList;
+    }
+
+    @Override
+    public List<Note> getAllNoteList() {
+        List<Note> noteList = new ArrayList<>();
+        if (conn == null) {
+            return noteList;
+        }
+        try {
+            String sql = "SELECT * FROM Note NATURAL JOIN User";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Note note = new Note();
+                note.setUid(rs.getInt(1));
+                note.setUname(rs.getString(12));
+                note.setNid(rs.getInt(2));
+                note.setNcontent(rs.getString(3));
+                note.setAllowComment(rs.getInt(7) == 1);
+                note.setStartTime(DateUtils.date2String(rs.getDate(8)));
+                note.setEndTime(DateUtils.date2String(rs.getDate(9)));
+                note.setRepeatType(rs.getString(10));
+                noteList.add(note);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return noteList;
     }
 }
