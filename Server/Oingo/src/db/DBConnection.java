@@ -5,6 +5,7 @@ import bean.Note;
 import bean.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DBConnection {
 	/**
@@ -45,4 +46,7 @@ public interface DBConnection {
 
 	public List<Note> getAllNoteList();
 
+	public List<User> getRequestsList(int uid);
+
+	public boolean updateRequestsList(int uid, int ruid, int accpet);
 }

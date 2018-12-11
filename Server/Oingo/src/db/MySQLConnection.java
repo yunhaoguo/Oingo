@@ -8,6 +8,7 @@ import utils.DateUtils;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MySQLConnection implements DBConnection{
 
@@ -134,5 +135,69 @@ public class MySQLConnection implements DBConnection{
             e.printStackTrace();
         }
         return noteList;
+    }
+
+    @Override
+    public List<User> getRequestsList(int uid) {
+        List<User> requestsList = new ArrayList<>();
+        if (conn == null) {
+            return requestsList;
+        }
+        try {
+            String sql = "SELECT * FROM User, Request WHERE User.uid = Request.from_uid and Request.to_uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setUid(rs.getInt("uid"));
+                user.setUemail(rs.getString("uemail"));
+                user.setUname(rs.getString("uname"));
+                user.setUstate(rs.getString("ustate"));
+                requestsList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return requestsList;
+    }
+
+    @Override
+    public boolean updateRequestsList(int uid, int ruid, int accept) {
+        if (conn == null) {
+            return true;
+        }
+        try {
+            String sql = "DELETE FROM Request WHERE from_uid = ? and to_uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, ruid);
+            stmt.setInt(2, uid);
+            int rows = stmt.executeUpdate();
+            if (rows != 1) {
+                return false;
+            }
+            if (accept == 1) {
+                String insertSql = "INSERT INTO Friendship(uid, fuid) VALUES (?, ?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, uid);
+                insertStmt.setInt(2, ruid);
+                int insertRow = insertStmt.executeUpdate();
+                if (insertRow != 1) {
+                    return false;
+                }
+                insertStmt.setInt(1, ruid);
+                insertStmt.setInt(2, uid);
+                if (insertStmt.executeUpdate() != 1) {
+                    return false;
+                }
+            } else {
+                //reject
+                //do nothing
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }

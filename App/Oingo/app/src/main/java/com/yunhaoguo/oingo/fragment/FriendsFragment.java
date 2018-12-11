@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,6 +52,8 @@ public class FriendsFragment extends Fragment {
 
     private TextView tvFriendRequests;
 
+    private SwipeRefreshLayout srlFriendList;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,6 +76,16 @@ public class FriendsFragment extends Fragment {
                 startActivity(new Intent(getActivity(), FriendRequestsActivity.class));
             }
         });
+
+        srlFriendList = view.findViewById(R.id.srl_friend_list);
+        srlFriendList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+                srlFriendList.setRefreshing(false);
+            }
+        });
+
     }
 
     private void initData() {

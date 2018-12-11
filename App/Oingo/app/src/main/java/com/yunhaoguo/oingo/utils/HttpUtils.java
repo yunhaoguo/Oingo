@@ -15,4 +15,5 @@ public class HttpUtils {
     public static final String REGISTER_URL = INITIAL_URL + "register";
     public static final String GET_FRIENDLIST_URL = INITIAL_URL + "friends";
     public static final String GET_NOTESLIST_URL = INITIAL_URL + "notes";
+    public static final String GET_REQUESTSLIST_URL = INITIAL_URL + "requests";
 }
