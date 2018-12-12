@@ -72,7 +72,6 @@ public class MySQLConnection implements DBConnection{
             stmt.setString(3, password);
             stmt.setString(4, ustate);
             int res = stmt.executeUpdate();
-            System.out.println("影响了多少行" + res);
             if (res > 0) {
                 return true;
             } else {
