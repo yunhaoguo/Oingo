@@ -20,7 +20,7 @@ public class RpcHelper {
 		out.close();
 	}
 
-              // Writes a JSONObject to http response.
+	// Writes a JSONObject to http response.
 	public static void writeJsonObject(HttpServletResponse response, JSONObject obj) throws IOException {		
 		response.setContentType("application/json");
 		response.setHeader("Access-Control-Allow-Origin", "");
