@@ -18,6 +18,19 @@ import java.util.List;
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        DBConnection connection = DBConnectionFactory.getConnection();
+        JSONObject input = RpcHelper.readJSONObject(request);
+        try {
+            int uid = input.getInt("uid");
+            String uname = input.getString("uname");
+            String uemail = input.getString("uemail");
+            String ustate = input.getString("ustate");
+            RpcHelper.writeJsonObject(response,
+                    new JSONObject().put("result", connection.editInfo(uid, uname, uemail, ustate)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

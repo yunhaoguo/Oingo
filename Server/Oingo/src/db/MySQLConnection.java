@@ -344,4 +344,26 @@ public class MySQLConnection implements DBConnection{
         }
         return true;
     }
+
+    @Override
+    public int editInfo(int uid, String uname, String uemail, String ustate) {
+        if (conn == null) {
+            return 0;
+        }
+        try {
+            String sql = "UPDATE User SET uname = ?, uemail = ?, ustate = ? WHERE uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, uname);
+            stmt.setString(2, uemail);
+            stmt.setString(3, ustate);
+            stmt.setInt(4, uid);
+            int editRow = stmt.executeUpdate();
+            if (editRow != 1) {
+                return 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
 }

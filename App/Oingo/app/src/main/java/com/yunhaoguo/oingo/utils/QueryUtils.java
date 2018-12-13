@@ -172,4 +172,20 @@ public class QueryUtils {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void editInfo(String uname, String uemail, String ustate, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("uid", AccountUtils.getUid());
+            obj.put("uname", uname);
+            obj.put("uemail", uemail);
+            obj.put("ustate", ustate);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.GET_USERINFO_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
 }

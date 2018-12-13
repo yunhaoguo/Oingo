@@ -61,4 +61,6 @@ public interface DBConnection {
 
 	public boolean addFriend(int uid, int fuid);
 
+	public int editInfo(int uid, String uname, String uemail, String ustate);
+
 }

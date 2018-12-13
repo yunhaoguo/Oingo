@@ -2,6 +2,7 @@ package com.yunhaoguo.oingo.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -142,6 +143,42 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 etName.setEnabled(false);
                 etState.setEnabled(false);
                 etEmail.setEnabled(false);
+                if (!TextUtils.isEmpty(etName.getText().toString()) && !TextUtils.isEmpty(etEmail.getText().toString())
+                        && !TextUtils.isEmpty(etState.getText().toString())) {
+                    QueryUtils.editInfo(etName.getText().toString(), etEmail.getText().toString(), etState.getText().toString(), new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            try {
+                                JSONObject responseObj = new JSONObject(response.body().string());
+                                if (responseObj.getInt("result") == 1) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(), "save info success", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(), "save info failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(this, "Info can not be empty", Toast.LENGTH_SHORT).show();
+                }
+
                 tvEditProfile.setVisibility(View.VISIBLE);
                 tvSave.setVisibility(View.GONE);
                 break;
@@ -152,7 +189,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     public void onFailure(Call call, IOException e) {
 
                     }
-
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         try {
