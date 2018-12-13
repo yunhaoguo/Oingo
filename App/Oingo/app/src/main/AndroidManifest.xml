@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.FriendRequestsActivity" />
-        <activity android:name=".activity.NoteDetailActivity"></activity>
+        <activity android:name=".activity.NoteDetailActivity" />
+        <activity android:name=".activity.ProfileActivity"></activity>
     </application>
 
 </manifest>

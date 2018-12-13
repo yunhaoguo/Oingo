@@ -26,24 +26,39 @@
                 android:gravity="center"
                 android:text="item"/>
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
+
+
+                <TextView
+                    android:id="@+id/tv_start_date"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"/>
                 <TextView
                     android:id="@+id/tv_from"
                     android:layout_weight="1"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="from"
-                    android:gravity="end"
+                    android:gravity="center"
                     />
-                <TextView
-                    android:id="@+id/tv_start_date"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/ll_friend_profile"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="end"/>
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/ic_person_black_48dp"/>
+                </LinearLayout>
+
+
             </LinearLayout>
 
         </LinearLayout>

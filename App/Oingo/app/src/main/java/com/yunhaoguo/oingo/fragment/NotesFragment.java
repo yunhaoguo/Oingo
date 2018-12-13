@@ -101,6 +101,7 @@ public class NotesFragment extends Fragment {
                 intent.putExtra("ncontent", note.getNcontent());
                 intent.putExtra("nstarttime", note.getStartTime());
                 intent.putExtra("nuname", note.getUname());
+                intent.putExtra("nuid", note.getUid());
                 startActivity(intent);
             }
         });

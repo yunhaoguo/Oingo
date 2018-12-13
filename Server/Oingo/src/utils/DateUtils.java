@@ -26,10 +26,10 @@ public class DateUtils {
     }
 
 
-    public static String date2String29(Date date) {
+    public static String date2String5(Date date) {
         Calendar calendar =new GregorianCalendar();
         calendar.setTime(date);
-        calendar.add(Calendar.HOUR_OF_DAY, +29);
+        calendar.add(Calendar.HOUR_OF_DAY, +5);
         java.util.Date utilDate = calendar.getTime();
         Date newDate =new Date(utilDate.getTime());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

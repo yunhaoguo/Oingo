@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yunhaoguo.oingo.R;
 import com.yunhaoguo.oingo.activity.FriendRequestsActivity;
+import com.yunhaoguo.oingo.activity.ProfileActivity;
 import com.yunhaoguo.oingo.adapter.FriendListAdapter;
 import com.yunhaoguo.oingo.entity.User;
 import com.yunhaoguo.oingo.utils.QueryUtils;
@@ -44,7 +45,7 @@ import okhttp3.Response;
 
 public class FriendsFragment extends Fragment {
 
-    private List<String> friendNameList = new ArrayList<>();
+    private List<User> friendList = new ArrayList<>();
 
     private RecyclerView rvFriendList;
 
@@ -66,7 +67,16 @@ public class FriendsFragment extends Fragment {
     private void initView(View view) {
         rvFriendList = view.findViewById(R.id.rv_friend_list);
         rvFriendList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        friendListAdapter = new FriendListAdapter(friendNameList);
+        friendListAdapter = new FriendListAdapter(friendList);
+        friendListAdapter.setOnItemClickListener(new FriendListAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                User user = friendList.get(position);
+                intent.putExtra("uid", user.getUid());
+                startActivity(intent);
+            }
+        });
         rvFriendList.setAdapter(friendListAdapter);
 
         tvFriendRequests = view.findViewById(R.id.tv_friend_requests);
@@ -102,16 +112,12 @@ public class FriendsFragment extends Fragment {
                     try {
                         JSONObject responseObj = new JSONObject(response.body().string());
                         Gson gson = new Gson();
-                        List<User> friendList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<User>>() {
+                        friendList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<User>>() {
                         }.getType());
-                        final List<String> tmp = new ArrayList<>();
-                        for (User user: friendList) {
-                            tmp.add(user.getUname());
-                        }
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                friendListAdapter.updateData(tmp);
+                                friendListAdapter.updateData(friendList);
                             }
                         });
 

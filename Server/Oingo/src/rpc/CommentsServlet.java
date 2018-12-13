@@ -20,25 +20,34 @@ import java.util.List;
 public class CommentsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DBConnection connection = DBConnectionFactory.getConnection();
-        Gson gson = new Gson();
         JSONObject input = RpcHelper.readJSONObject(request);
         try {
             int uid = input.getInt("uid");
             int nid = input.getInt("nid");
             String ctime = input.getString("ctime");
-            String ccontent = input.getString("ccontent");
-            Comment comment = new Comment();
-            comment.setUid(uid);
-            comment.setNid(nid);
-            comment.setCtime(ctime);
-            comment.setCcontent(ccontent);
-            boolean result = connection.addComment(comment);
-            RpcHelper.writeJsonObject(response, new JSONObject().put("result", result ? 1 : 0));
+            if (input.getInt("op") == 1) {
+                String ccontent = input.getString("ccontent");
+                Comment comment = new Comment();
+                comment.setUid(uid);
+                comment.setNid(nid);
+                comment.setCtime(ctime);
+                comment.setCcontent(ccontent);
+                boolean result = connection.addComment(comment);
+                RpcHelper.writeJsonObject(response, new JSONObject().put("result", result ? 1 : 0));
+            } else {
+                Comment comment = new Comment();
+                comment.setUid(uid);
+                comment.setNid(nid);
+                comment.setCtime(ctime);
+                boolean result = connection.deleteComment(comment);
+                RpcHelper.writeJsonObject(response, new JSONObject().put("result", result ? 1 : 0));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
             connection.close();
         }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

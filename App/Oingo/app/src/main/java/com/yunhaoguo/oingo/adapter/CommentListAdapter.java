@@ -43,10 +43,17 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.tvCommentContent.setText(mData.get(position).getCcontent());
         holder.tvFrom.setText(mData.get(position).getUname());
         holder.tvDate.setText(mData.get(position).getCtime());
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onItemLongClick(position);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -68,5 +75,14 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         }
     }
 
+    public interface ItemLongClickListener {
+        void onItemLongClick(int position);
+    }
+
+    private ItemLongClickListener listener;
+
+    public void setOnItemLongClickListener(ItemLongClickListener listener) {
+        this.listener = listener;
+    }
 
 }

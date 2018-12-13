@@ -12,6 +12,7 @@ package com.yunhaoguo.oingo.entity;
 public class Comment {
 
     private int uid;
+    private int nid;
     private String uname;
     private String ctime;
     private String ccontent;
@@ -24,6 +25,13 @@ public class Comment {
         this.uname = uname;
     }
 
+    public int getNid() {
+        return nid;
+    }
+
+    public void setNid(int nid) {
+        this.nid = nid;
+    }
 
     public int getUid() {
         return uid;

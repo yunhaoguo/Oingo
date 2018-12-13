@@ -54,4 +54,9 @@ public interface DBConnection {
 	public List<Comment> getCommentsList(int nid);
 
 	public boolean addComment(Comment comment);
+
+	public User getUserInfo(int uid);
+
+	public boolean deleteComment(Comment comment);
+
 }

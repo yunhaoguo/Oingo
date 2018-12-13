@@ -1,8 +1,10 @@
 package com.yunhaoguo.oingo.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,8 +43,11 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     private TextView tvNoteContent;
     private TextView tvNoteUName;
     private TextView tvNoteTime;
+    private LinearLayout llFriendProfile;
+
 
     private int noteid;
+    private int nuid;
     private String noteContent;
     private String noteUname;
     private String noteTime;
@@ -74,10 +79,42 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
         tvNoteTime.setText(noteTime);
         tvNoteUName = findViewById(R.id.tv_from);
         tvNoteUName.setText(noteUname);
+        llFriendProfile = findViewById(R.id.ll_friend_profile);
+        llFriendProfile.setOnClickListener(this);
         rvCommentsList = findViewById(R.id.rv_comments);
         rvCommentsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         commentListAdapter = new CommentListAdapter(commentsList);
+        commentListAdapter.setOnItemLongClickListener(new CommentListAdapter.ItemLongClickListener() {
+            @Override
+            public void onItemLongClick(final int position) {
+                AlertDialog dialog = new AlertDialog.Builder(NoteDetailActivity.this).setTitle("Are you sure to delete this comment?")
+                        .setNegativeButton("cancel", null).setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        //check if the comment was created by the current user
+                                        if (commentsList.get(position).getUid() == AccountUtils.getUid() || nuid == AccountUtils.getUid()) {
+                                            deleteComment(commentsList.get(position), position);
+
+                                        } else {
+                                            //no permission
+                                            Toast.makeText(getApplicationContext(), "you have no permission to delete", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        break;
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                        break;
+                                }
+                            }
+                        }).create();
+                dialog.show();
+
+            }
+        });
         rvCommentsList.setAdapter(commentListAdapter);
+
 
         llCommentIcon = findViewById(R.id.ll_comment);
         ivCommentIcon = findViewById(R.id.iv_comment);
@@ -90,6 +127,46 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
         etContent = findViewById(R.id.et_comment_content);
 
         imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
+
+    private void deleteComment(Comment comment, final int position) {
+        QueryUtils.deleteComment(comment, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject responseObj = new JSONObject(response.body().string());
+                    int result = responseObj.getInt("result");
+                    if (result == 1) {
+                        commentsList.remove(position);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                commentListAdapter.updateData(commentsList);
+                                Toast.makeText(getApplicationContext(), "delete success", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "delete failed in database", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
     }
 
     private void initData() {
@@ -124,6 +201,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
         noteContent = intent.getStringExtra("ncontent");
         noteTime = intent.getStringExtra("nstarttime");
         noteUname = intent.getStringExtra("nuname");
+        nuid = intent.getIntExtra("nuid", -1);
 
     }
 
@@ -150,6 +228,10 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                 rlComment.setVisibility(View.GONE);
                 imm.hideSoftInputFromWindow(etContent.getWindowToken(), 0);
                 break;
+            case R.id.ll_friend_profile:
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("uid", nuid);
+                startActivity(intent);
             default:
                 break;
 
@@ -165,17 +247,18 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
             comment.setCcontent(etContent.getText().toString());
             comment.setUname(AccountUtils.getUname());
             comment.setCtime(DateUtils.getCurrentTime());
+            comment.setNid(noteid);
             commentsList.add(comment);
             commentListAdapter.updateData(commentsList);
             etContent.setText("");
-            updateDatabase(comment);
+            insertDatabase(comment);
 
 
         }
 
     }
 
-    private void updateDatabase(Comment comment) {
+    private void insertDatabase(Comment comment) {
         QueryUtils.addComment(comment, noteid, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

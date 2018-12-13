@@ -120,6 +120,7 @@ public class QueryUtils {
     public static void addComment(Comment comment, int nid, Callback callback) {
         JSONObject obj = new JSONObject();
         try {
+            obj.put("op", 1);
             obj.put("uid", AccountUtils.getUid());
             obj.put("nid", nid);
             obj.put("ctime", comment.getCtime());
@@ -129,6 +130,32 @@ public class QueryUtils {
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
         Request request = new Request.Builder().url(HttpUtils.GET_COMMENTSLIST_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void deleteComment(Comment comment, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("op", 0);
+            obj.put("uid", comment.getUid());
+            obj.put("nid", comment.getNid());
+            obj.put("ctime", comment.getCtime());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.GET_COMMENTSLIST_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void getUserInfo(int uid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("uid", uid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Request request = new Request.Builder().url(HttpUtils.GET_USERINFO_URL + "?uid=" + uid).build();
         client.newCall(request).enqueue(callback);
     }
 

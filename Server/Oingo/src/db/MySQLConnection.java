@@ -7,6 +7,7 @@ import bean.User;
 import utils.DateUtils;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -100,10 +101,10 @@ public class MySQLConnection implements DBConnection{
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 User user = new User();
-                user.setUid(rs.getInt(1));
-                user.setUemail(rs.getString(2));
-                user.setUname(rs.getString(3));
-                user.setUstate(rs.getString(5));
+                user.setUid(rs.getInt("uid"));
+                user.setUemail(rs.getString("uemail"));
+                user.setUname(rs.getString("uname"));
+                user.setUstate(rs.getString("ustate"));
                 friendList.add(user);
             }
         } catch (SQLException e) {
@@ -124,14 +125,14 @@ public class MySQLConnection implements DBConnection{
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Note note = new Note();
-                note.setUid(rs.getInt(1));
-                note.setUname(rs.getString(12));
-                note.setNid(rs.getInt(2));
-                note.setNcontent(rs.getString(3));
-                note.setAllowComment(rs.getInt(7) == 1);
-                note.setStartTime(DateUtils.date2String(rs.getDate(8)));
-                note.setEndTime(DateUtils.date2String(rs.getDate(9)));
-                note.setRepeatType(rs.getString(10));
+                note.setUid(rs.getInt("uid"));
+                note.setUname(rs.getString("uname"));
+                note.setNid(rs.getInt("nid"));
+                note.setNcontent(rs.getString("ncontent"));
+                note.setAllowComment(rs.getInt("allow_comment") == 1);
+                note.setStartTime(DateUtils.date2String(rs.getDate("nstarttime")));
+                note.setEndTime(DateUtils.date2String(rs.getDate("nendtime")));
+                note.setRepeatType(rs.getString("nrepeat_type"));
                 noteList.add(note);
             }
         } catch (SQLException e) {
@@ -217,15 +218,17 @@ public class MySQLConnection implements DBConnection{
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Comment comment = new Comment();
+                comment.setNid(rs.getInt("nid"));
                 comment.setUid(rs.getInt("uid"));
                 comment.setUname(rs.getString("uname"));
                 comment.setCcontent(rs.getString("ccontent"));
-                String date = rs.getDate("ctime").toString();
-                String time = rs.getTime("ctime").toString();
-                String datetime = date.split(" ")[0] + " " + time;
-                String resultdatetime = DateUtils.date2String29(DateUtils.str2Date(datetime));
+                Date time1=new Date(rs.getTimestamp("ctime").getTime());
+                SimpleDateFormat formattime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String ctime=formattime.format(time1);
+
+                String resultdatetime = DateUtils.date2String5(DateUtils.str2Date(ctime));
+                System.out.println("结束" + resultdatetime);
                 comment.setCtime(resultdatetime);
-                System.out.println(resultdatetime);
                 commentsList.add(comment);
             }
         } catch (SQLException e) {
@@ -249,6 +252,57 @@ public class MySQLConnection implements DBConnection{
                 insertStmt.setString(4, comment.getCcontent());
                 int insertRow = insertStmt.executeUpdate();
                 if (insertRow != 1) {
+                    return false;
+                }
+            } else {
+                //reject
+                //do nothing
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    public User getUserInfo(int uid) {
+        User user = new User();
+        if (conn == null) {
+            return user;
+        }
+        try {
+            String sql = "SELECT * FROM User WHERE uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                user.setUid(rs.getInt("uid"));
+                user.setUemail(rs.getString("uemail"));
+                user.setUname(rs.getString("uname"));
+                user.setUstate(rs.getString("ustate"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    @Override
+    public boolean deleteComment(Comment comment) {
+        if (conn == null) {
+            return false;
+        }
+        try {
+            if (comment != null) {
+                String insertSql = "DELETE FROM Comment WHERE uid = ? and nid = ? and ctime = ?";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, comment.getUid());
+                insertStmt.setInt(2, comment.getNid());
+                System.out.println("come" + comment.getCtime());
+                insertStmt.setString(3, comment.getCtime());
+                int deleteRow = insertStmt.executeUpdate();
+                if (deleteRow != 1) {
                     return false;
                 }
             } else {
