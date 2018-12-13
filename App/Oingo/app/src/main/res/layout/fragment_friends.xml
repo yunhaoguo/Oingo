@@ -16,7 +16,7 @@
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/black"/>
+            android:background="@color/gray"/>
         <TextView
             android:id="@+id/tv_friend_requests"
             android:layout_width="0dp"
@@ -29,7 +29,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black"/>
+        android:background="@color/gray"/>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_friend_list"
         android:layout_width="match_parent"

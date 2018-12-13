@@ -59,4 +59,6 @@ public interface DBConnection {
 
 	public boolean deleteComment(Comment comment);
 
+	public boolean addFriend(int uid, int fuid);
+
 }

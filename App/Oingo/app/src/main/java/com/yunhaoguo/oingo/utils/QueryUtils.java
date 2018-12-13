@@ -159,4 +159,17 @@ public class QueryUtils {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void addFriend(int fuid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("uid", AccountUtils.getUid());
+            obj.put("fuid", fuid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.ADD_FRIEND_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
 }

@@ -315,4 +315,33 @@ public class MySQLConnection implements DBConnection{
         }
         return true;
     }
+
+    @Override
+    public boolean addFriend(int uid, int fuid) {
+        if (conn == null) {
+            return false;
+        }
+        try {
+            String sql = "SELECT * FROM Request WHERE from_uid = ? and to_uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            stmt.setInt(2, fuid);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return false;
+            } else {
+                String insertSql = "INSERT INTO Request(from_uid, to_uid) VALUES (?, ?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, uid);
+                insertStmt.setInt(2, fuid);
+                int insertRow = insertStmt.executeUpdate();
+                if (insertRow != 1) {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 }
