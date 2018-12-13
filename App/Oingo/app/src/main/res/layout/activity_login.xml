@@ -13,12 +13,12 @@
         android:src="@mipmap/ic_launcher"/>
     <EditText
         android:id="@+id/et_login_username"
-        android:hint="username"
+        android:hint="User name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/et_login_password"
-        android:hint="password"
+        android:hint="Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"/>
