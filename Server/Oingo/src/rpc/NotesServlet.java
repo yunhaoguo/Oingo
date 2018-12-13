@@ -32,7 +32,6 @@ public class NotesServlet extends HttpServlet {
                 double radius = input.getDouble("fradius");
                 boolean from_friend = input.getBoolean("from_friend");
             } else {
-                System.out.println("guodage");
                 List<Note> noteList = connection.getAllNoteList();
                 String noteListStr = gson.toJson(noteList);
                 RpcHelper.writeJsonObject(response, new JSONObject().put("result", noteListStr));

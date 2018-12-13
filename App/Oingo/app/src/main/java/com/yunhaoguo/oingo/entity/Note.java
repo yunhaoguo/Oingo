@@ -9,7 +9,11 @@ package com.yunhaoguo.oingo.entity;
  */
 
 
-public class Note {
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Note implements Serializable{
     private int nid;
     private int uid;
     private String uname;

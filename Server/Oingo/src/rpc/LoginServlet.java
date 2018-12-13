@@ -1,5 +1,7 @@
 package rpc;
 
+import bean.User;
+import com.google.gson.Gson;
 import db.DBConnection;
 import db.DBConnectionFactory;
 
@@ -35,8 +37,11 @@ public class LoginServlet extends HttpServlet {
             JSONObject input = RpcHelper.readJSONObject(request);
             String userName = input.getString("userName");
             String password = input.getString("password");
-            int uid = connection.verifyLogin(userName, password);
-            RpcHelper.writeJsonObject(response, new JSONObject().put("result", uid));
+            User user = connection.verifyLogin(userName, password);
+            Gson gson = new Gson();
+            String userStr = gson.toJson(user);
+            System.out.println(userStr);
+            RpcHelper.writeJsonObject(response, new JSONObject().put("result", userStr));
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package db;
 
 
+import bean.Comment;
 import bean.Note;
 import bean.User;
 
@@ -22,7 +23,7 @@ public interface DBConnection {
 	 * @param password
 	 * @return boolean
 	 */
-	public int verifyLogin(String userId, String password);
+	public User verifyLogin(String userId, String password);
 
 	/**
 	 * Add a new user into database
@@ -49,4 +50,18 @@ public interface DBConnection {
 	public List<User> getRequestsList(int uid);
 
 	public boolean updateRequestsList(int uid, int ruid, int accpet);
+
+	public List<Comment> getCommentsList(int nid);
+
+	public boolean addComment(Comment comment);
+
+	public User getUserInfo(int uid);
+
+	public boolean deleteComment(Comment comment);
+
+	public boolean addFriend(int uid, int fuid);
+
+	public int editInfo(int uid, String uname, String uemail, String ustate);
+
+	public int deleteFriend(int uid, int fuid);
 }

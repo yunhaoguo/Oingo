@@ -9,8 +9,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 
-
+import com.yunhaoguo.oingo.activity.ProfileActivity;
 import com.yunhaoguo.oingo.fragment.FriendsFragment;
 import com.yunhaoguo.oingo.fragment.NotesFragment;
 import com.yunhaoguo.oingo.utils.AccountUtils;
@@ -35,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> noteList;
 
-    // ---- ----
-    // private Toolbar mToolbar
+
+    private ImageView ivMyProfile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int uid = intent.getIntExtra("uid", -1);
+        String uname = intent.getStringExtra("uname");
         AccountUtils.setUid(uid);
+        AccountUtils.setUname(uname);
         mTitles = new ArrayList<>();
         mTitles.add("Notes");
         mTitles.add("Friends");
@@ -125,6 +130,16 @@ public class MainActivity extends AppCompatActivity {
         //绑定
         mTabLayout.setupWithViewPager(mViewPager);
 
+
+        ivMyProfile = findViewById(R.id.iv_my_profile);
+        ivMyProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("uid", AccountUtils.getUid());
+                startActivity(intent);
+            }
+        });
 
     }
 

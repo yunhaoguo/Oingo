@@ -19,10 +19,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.yunhaoguo.oingo.MainActivity;
 import com.yunhaoguo.oingo.R;
 import com.yunhaoguo.oingo.activity.FilterActivity;
 import com.yunhaoguo.oingo.activity.LoginActivity;
+import com.yunhaoguo.oingo.activity.NoteDetailActivity;
 import com.yunhaoguo.oingo.adapter.NoteListAdapter;
 import com.yunhaoguo.oingo.entity.Note;
 import com.yunhaoguo.oingo.utils.QueryUtils;
@@ -87,7 +87,7 @@ public class NotesFragment extends Fragment {
                 try {
                     JSONObject responseObj = new JSONObject(response.body().string());
                     Gson gson = new Gson();
-                    final List<Note> noteList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<Note>>() {
+                    noteList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<Note>>() {
                     }.getType());
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -108,7 +108,19 @@ public class NotesFragment extends Fragment {
         rvNoteList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         noteListAdapter = new NoteListAdapter(noteList);
         rvNoteList.setAdapter(noteListAdapter);
-
+        noteListAdapter.setOnItemClickListener(new NoteListAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
+                Note note = noteList.get(position);
+                intent.putExtra("nid", note.getNid());
+                intent.putExtra("ncontent", note.getNcontent());
+                intent.putExtra("nstarttime", note.getStartTime());
+                intent.putExtra("nuname", note.getUname());
+                intent.putExtra("nuid", note.getUid());
+                startActivity(intent);
+            }
+        });
 
     }
 

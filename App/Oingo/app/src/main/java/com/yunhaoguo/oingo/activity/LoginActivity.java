@@ -12,8 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.yunhaoguo.oingo.MainActivity;
 import com.yunhaoguo.oingo.R;
+import com.yunhaoguo.oingo.entity.User;
 import com.yunhaoguo.oingo.utils.QueryUtils;
 
 import org.json.JSONException;
@@ -88,10 +90,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     JSONObject responseObj = new JSONObject(response.body().string());
-                    int uid = responseObj.getInt("result");
-                    if (uid != -1) {
+                    Gson gson = new Gson();
+                    User user = gson.fromJson(responseObj.getString("result"), User.class);
+                    if (user.getUid() != 0) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("uid", uid);
+                        intent.putExtra("uid", user.getUid());
+                        intent.putExtra("uname", user.getUname());
+                        intent.putExtra("uemail", user.getUemail());
+                        intent.putExtra("ustate", user.getUstate());
                         startActivity(intent);
                         finish();
                     } else {

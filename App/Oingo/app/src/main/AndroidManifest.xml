@@ -23,6 +23,8 @@
         <activity android:name=".activity.FriendRequestsActivity" />
         <activity android:name=".activity.FilterActivity" />
         <activity android:name=".activity.CreateFilterActivity"></activity>
+        <activity android:name=".activity.NoteDetailActivity" />
+        <activity android:name=".activity.ProfileActivity"></activity>
     </application>
 
 </manifest>

@@ -16,18 +16,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yunhaoguo.oingo.R;
+import com.yunhaoguo.oingo.entity.User;
 
 import java.util.List;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder>{
 
-    private List<String> mData;
+    private List<User> mData;
 
-    public FriendListAdapter(List<String> data) {
+    public FriendListAdapter(List<User> data) {
         this.mData = data;
     }
 
-    public void updateData(List<String> data) {
+    public void updateData(List<User> data) {
         this.mData = data;
         notifyDataSetChanged();
     }
@@ -36,12 +37,26 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_friend_list, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick((int)v.getTag());
+            }
+        });
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                longClickListener.onItemLongClick((int)v.getTag());
+                return true;
+            }
+        });
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTv.setText(mData.get(position));
+        holder.mTv.setText(mData.get(position).getUname());
+        holder.itemView.setTag(position);
     }
 
     @Override
@@ -57,5 +72,25 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
             super(itemView);
             mTv = itemView.findViewById(R.id.tv_friend_info);
         }
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(int position);
+    }
+
+    private ItemClickListener listener;
+
+    public void setOnItemClickListener(ItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface ItemLongClickListener {
+        void onItemLongClick(int position);
+    }
+
+    private ItemLongClickListener longClickListener;
+
+    public void setOnItemLongClickListener(ItemLongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
     }
 }

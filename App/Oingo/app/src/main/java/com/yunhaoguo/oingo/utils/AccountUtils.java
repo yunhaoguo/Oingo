@@ -12,6 +12,15 @@ package com.yunhaoguo.oingo.utils;
 public class AccountUtils {
 
     private static int uid = -1;
+    private static String uname = "";
+
+    public static String getUname() {
+        return uname;
+    }
+
+    public static void setUname(String uname) {
+        AccountUtils.uname = uname;
+    }
 
     public static int getUid() {
         return uid;

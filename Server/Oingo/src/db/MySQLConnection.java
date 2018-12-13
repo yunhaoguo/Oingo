@@ -1,11 +1,13 @@
 package db;
 
 
+import bean.Comment;
 import bean.Note;
 import bean.User;
 import utils.DateUtils;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,25 +39,28 @@ public class MySQLConnection implements DBConnection{
 
 
 	@Override
-	public int verifyLogin(String userName, String password) {
+	public User verifyLogin(String userName, String password) {
         if (conn == null) {
-            return -1;
+            return new User();
         }
         try {
-            String sql = "SELECT uid FROM User WHERE binary uname = ? AND binary upassword = ?";
+            String sql = "SELECT * FROM User WHERE binary uname = ? AND binary upassword = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, userName);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
-            } else {
-                return -1;
+                User user = new User();
+                user.setUid(rs.getInt("uid"));
+                user.setUname(rs.getString("uname"));
+                user.setUstate(rs.getString("ustate"));
+                user.setUemail(rs.getString("uemail"));
+                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+        return new User();
     }
 
     @Override
@@ -96,10 +101,10 @@ public class MySQLConnection implements DBConnection{
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 User user = new User();
-                user.setUid(rs.getInt(1));
-                user.setUemail(rs.getString(2));
-                user.setUname(rs.getString(3));
-                user.setUstate(rs.getString(5));
+                user.setUid(rs.getInt("uid"));
+                user.setUemail(rs.getString("uemail"));
+                user.setUname(rs.getString("uname"));
+                user.setUstate(rs.getString("ustate"));
                 friendList.add(user);
             }
         } catch (SQLException e) {
@@ -120,14 +125,14 @@ public class MySQLConnection implements DBConnection{
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Note note = new Note();
-                note.setUid(rs.getInt(1));
-                note.setUname(rs.getString(12));
-                note.setNid(rs.getInt(2));
-                note.setNcontent(rs.getString(3));
-                note.setAllowComment(rs.getInt(7) == 1);
-                note.setStartTime(DateUtils.date2String(rs.getDate(8)));
-                note.setEndTime(DateUtils.date2String(rs.getDate(9)));
-                note.setRepeatType(rs.getString(10));
+                note.setUid(rs.getInt("uid"));
+                note.setUname(rs.getString("uname"));
+                note.setNid(rs.getInt("nid"));
+                note.setNcontent(rs.getString("ncontent"));
+                note.setAllowComment(rs.getInt("allow_comment") == 1);
+                note.setStartTime(DateUtils.date2String(rs.getDate("nstarttime")));
+                note.setEndTime(DateUtils.date2String(rs.getDate("nendtime")));
+                note.setRepeatType(rs.getString("nrepeat_type"));
                 noteList.add(note);
             }
         } catch (SQLException e) {
@@ -198,5 +203,195 @@ public class MySQLConnection implements DBConnection{
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public List<Comment> getCommentsList(int nid) {
+        List<Comment> commentsList = new ArrayList<>();
+        if (conn == null) {
+            return commentsList;
+        }
+        try {
+            String sql = "SELECT * FROM Comment NATURAL JOIN  User WHERE nid = ? ORDER BY ctime asc";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, nid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Comment comment = new Comment();
+                comment.setNid(rs.getInt("nid"));
+                comment.setUid(rs.getInt("uid"));
+                comment.setUname(rs.getString("uname"));
+                comment.setCcontent(rs.getString("ccontent"));
+                Date time1=new Date(rs.getTimestamp("ctime").getTime());
+                SimpleDateFormat formattime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String ctime=formattime.format(time1);
+
+                String resultdatetime = DateUtils.date2String5(DateUtils.str2Date(ctime));
+                System.out.println("结束" + resultdatetime);
+                comment.setCtime(resultdatetime);
+                commentsList.add(comment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return commentsList;
+    }
+
+    @Override
+    public boolean addComment(Comment comment) {
+        if (conn == null) {
+            return false;
+        }
+        try {
+            if (comment != null) {
+                String insertSql = "INSERT INTO Comment(uid, nid, ctime, ccontent) VALUES (?, ?, ?, ?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, comment.getUid());
+                insertStmt.setInt(2, comment.getNid());
+                insertStmt.setString(3, comment.getCtime());
+                insertStmt.setString(4, comment.getCcontent());
+                int insertRow = insertStmt.executeUpdate();
+                if (insertRow != 1) {
+                    return false;
+                }
+            } else {
+                //reject
+                //do nothing
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    public User getUserInfo(int uid) {
+        User user = new User();
+        if (conn == null) {
+            return user;
+        }
+        try {
+            String sql = "SELECT * FROM User WHERE uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                user.setUid(rs.getInt("uid"));
+                user.setUemail(rs.getString("uemail"));
+                user.setUname(rs.getString("uname"));
+                user.setUstate(rs.getString("ustate"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    @Override
+    public boolean deleteComment(Comment comment) {
+        if (conn == null) {
+            return false;
+        }
+        try {
+            if (comment != null) {
+                String deleteSql = "DELETE FROM Comment WHERE uid = ? and nid = ? and ctime = ?";
+                PreparedStatement deleteStmt = conn.prepareStatement(deleteSql);
+                deleteStmt.setInt(1, comment.getUid());
+                deleteStmt.setInt(2, comment.getNid());
+                System.out.println("come" + comment.getCtime());
+                deleteStmt.setString(3, comment.getCtime());
+                int deleteRow = deleteStmt.executeUpdate();
+                if (deleteRow != 1) {
+                    return false;
+                }
+            } else {
+                //reject
+                //do nothing
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean addFriend(int uid, int fuid) {
+        if (conn == null) {
+            return false;
+        }
+        try {
+            String sql = "SELECT * FROM Request WHERE from_uid = ? and to_uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            stmt.setInt(2, fuid);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return false;
+            } else {
+                String insertSql = "INSERT INTO Request(from_uid, to_uid) VALUES (?, ?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, uid);
+                insertStmt.setInt(2, fuid);
+                int insertRow = insertStmt.executeUpdate();
+                if (insertRow != 1) {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    public int editInfo(int uid, String uname, String uemail, String ustate) {
+        if (conn == null) {
+            return 0;
+        }
+        try {
+            String sql = "UPDATE User SET uname = ?, uemail = ?, ustate = ? WHERE uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, uname);
+            stmt.setString(2, uemail);
+            stmt.setString(3, ustate);
+            stmt.setInt(4, uid);
+            int editRow = stmt.executeUpdate();
+            if (editRow != 1) {
+                return 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    @Override
+    public int deleteFriend(int uid, int fuid) {
+        if (conn == null) {
+            return 0;
+        }
+        try {
+            String deleteSql = "DELETE FROM Friendship WHERE uid = ? and fuid = ?";
+            PreparedStatement deleteStmt1 = conn.prepareStatement(deleteSql);
+            deleteStmt1.setInt(1, uid);
+            deleteStmt1.setInt(2, fuid);
+            int deleteRow = deleteStmt1.executeUpdate();
+            if (deleteRow != 1) {
+                return 0;
+            }
+            String deleteSql2 = "DELETE FROM Friendship WHERE fuid = ? and uid = ?";
+            PreparedStatement deleteStmt2 = conn.prepareStatement(deleteSql2);
+            deleteStmt2.setInt(1, uid);
+            deleteStmt2.setInt(2, fuid);
+            int deleteRow2 = deleteStmt2.executeUpdate();
+            if (deleteRow2 != 1) {
+                return 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
     }
 }

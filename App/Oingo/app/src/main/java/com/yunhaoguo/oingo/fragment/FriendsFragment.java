@@ -1,12 +1,13 @@
 package com.yunhaoguo.oingo.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yunhaoguo.oingo.R;
 import com.yunhaoguo.oingo.activity.FriendRequestsActivity;
+import com.yunhaoguo.oingo.activity.ProfileActivity;
 import com.yunhaoguo.oingo.adapter.FriendListAdapter;
 import com.yunhaoguo.oingo.entity.User;
 import com.yunhaoguo.oingo.utils.QueryUtils;
@@ -50,7 +52,7 @@ import okhttp3.Response;
 
 public class FriendsFragment extends Fragment {
 
-    private List<String> friendNameList = new ArrayList<>();
+    private List<User> friendList = new ArrayList<>();
 
     private RecyclerView rvFriendList;
 
@@ -77,7 +79,36 @@ public class FriendsFragment extends Fragment {
     private void initView(View view) {
         rvFriendList = view.findViewById(R.id.rv_friend_list);
         rvFriendList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        friendListAdapter = new FriendListAdapter(friendNameList);
+        friendListAdapter = new FriendListAdapter(friendList);
+        friendListAdapter.setOnItemClickListener(new FriendListAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                User user = friendList.get(position);
+                intent.putExtra("uid", user.getUid());
+                startActivity(intent);
+            }
+        });
+        friendListAdapter.setOnItemLongClickListener(new FriendListAdapter.ItemLongClickListener() {
+            @Override
+            public void onItemLongClick(final int position) {
+                AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("Are you sure to end the relationship?")
+                        .setNegativeButton("cancel", null).setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        deleteFriend(friendList.get(position).getUid());
+                                        break;
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                        break;
+                                }
+                            }
+                        }).create();
+                dialog.show();
+            }
+        });
         rvFriendList.setAdapter(friendListAdapter);
 
         tvFriendRequests = view.findViewById(R.id.tv_friend_requests);
@@ -99,6 +130,40 @@ public class FriendsFragment extends Fragment {
 
     }
 
+    private void deleteFriend(int fuid) {
+        QueryUtils.deleteFriend(fuid, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject responseObj = new JSONObject(response.body().string());
+                    if (responseObj.getInt("result") == 1) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getActivity(), "delete success", Toast.LENGTH_SHORT).show();
+                                initData();
+                            }
+                        });
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getActivity(), "delete failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void initData() {
         int uid = getArguments().getInt("uid");
         if (uid != -1) {
@@ -113,16 +178,12 @@ public class FriendsFragment extends Fragment {
                     try {
                         JSONObject responseObj = new JSONObject(response.body().string());
                         Gson gson = new Gson();
-                        List<User> friendList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<User>>() {
+                        friendList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<User>>() {
                         }.getType());
-                        final List<String> tmp = new ArrayList<>();
-                        for (User user: friendList) {
-                            tmp.add(user.getUname());
-                        }
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                friendListAdapter.updateData(tmp);
+                                friendListAdapter.updateData(friendList);
                             }
                         });
 
