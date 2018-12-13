@@ -20,12 +20,24 @@ import java.util.List;
 @WebServlet("/friends")
 public class FriendsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        DBConnection connection = DBConnectionFactory.getConnection();
+        JSONObject input = RpcHelper.readJSONObject(request);
+        try {
+            int uid = input.getInt("uid");
+            int fuid = input.getInt("fuid");
+            RpcHelper.writeJsonObject(response,
+                    new JSONObject().put("result", connection.deleteFriend(uid, fuid)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DBConnection connection = DBConnectionFactory.getConnection();
         Gson gson = new Gson();
-        JSONObject input = RpcHelper.readJSONObject(request);
-        int uid = 0;
+        int uid = Integer.parseInt(request.getParameter("uid"));
         try {
-            uid = input.getInt("uid");
             List<User> friendList = connection.getFriendList(uid);
             String friendListStr = gson.toJson(friendList);
             RpcHelper.writeJsonObject(response, new JSONObject().put("result", friendListStr));
@@ -34,10 +46,5 @@ public class FriendsServlet extends HttpServlet {
         } finally {
             connection.close();
         }
-
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 }

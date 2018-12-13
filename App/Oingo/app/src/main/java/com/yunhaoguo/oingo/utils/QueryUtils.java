@@ -55,14 +55,7 @@ public class QueryUtils {
 
 
     public static void getFriendList(int uid, Callback callback) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("uid", uid);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
-        Request request = new Request.Builder().url(HttpUtils.GET_FRIENDLIST_URL).post(requestBody).build();
+        Request request = new Request.Builder().url(HttpUtils.GET_FRIENDLIST_URL + "?uid=" + uid).build();
         client.newCall(request).enqueue(callback);
     }
 
@@ -169,6 +162,18 @@ public class QueryUtils {
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
         Request request = new Request.Builder().url(HttpUtils.ADD_FRIEND_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+    public static void deleteFriend(int fuid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("uid", AccountUtils.getUid());
+            obj.put("fuid", fuid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.GET_FRIENDLIST_URL).post(requestBody).build();
         client.newCall(request).enqueue(callback);
     }
 

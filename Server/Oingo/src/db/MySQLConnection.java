@@ -295,13 +295,13 @@ public class MySQLConnection implements DBConnection{
         }
         try {
             if (comment != null) {
-                String insertSql = "DELETE FROM Comment WHERE uid = ? and nid = ? and ctime = ?";
-                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
-                insertStmt.setInt(1, comment.getUid());
-                insertStmt.setInt(2, comment.getNid());
+                String deleteSql = "DELETE FROM Comment WHERE uid = ? and nid = ? and ctime = ?";
+                PreparedStatement deleteStmt = conn.prepareStatement(deleteSql);
+                deleteStmt.setInt(1, comment.getUid());
+                deleteStmt.setInt(2, comment.getNid());
                 System.out.println("come" + comment.getCtime());
-                insertStmt.setString(3, comment.getCtime());
-                int deleteRow = insertStmt.executeUpdate();
+                deleteStmt.setString(3, comment.getCtime());
+                int deleteRow = deleteStmt.executeUpdate();
                 if (deleteRow != 1) {
                     return false;
                 }
@@ -359,6 +359,34 @@ public class MySQLConnection implements DBConnection{
             stmt.setInt(4, uid);
             int editRow = stmt.executeUpdate();
             if (editRow != 1) {
+                return 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    @Override
+    public int deleteFriend(int uid, int fuid) {
+        if (conn == null) {
+            return 0;
+        }
+        try {
+            String deleteSql = "DELETE FROM Friendship WHERE uid = ? and fuid = ?";
+            PreparedStatement deleteStmt1 = conn.prepareStatement(deleteSql);
+            deleteStmt1.setInt(1, uid);
+            deleteStmt1.setInt(2, fuid);
+            int deleteRow = deleteStmt1.executeUpdate();
+            if (deleteRow != 1) {
+                return 0;
+            }
+            String deleteSql2 = "DELETE FROM Friendship WHERE fuid = ? and uid = ?";
+            PreparedStatement deleteStmt2 = conn.prepareStatement(deleteSql2);
+            deleteStmt2.setInt(1, uid);
+            deleteStmt2.setInt(2, fuid);
+            int deleteRow2 = deleteStmt2.executeUpdate();
+            if (deleteRow2 != 1) {
                 return 0;
             }
         } catch (SQLException e) {
