@@ -36,15 +36,6 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-/*
- * 项目名:     Oingo
- * 包名:      com.yunhaoguo.oingo.fragment
- * 文件名:     FriendsFragment
- * 创建者:     yunhaoguo
- * 创建时间:    2018/12/5 11:39 PM
- * 描述:      TODO
- */
-
 
 public class FriendsFragment extends Fragment {
 
@@ -62,6 +53,11 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friends, null);
+
+
+        // TODO: Toolbar from NotesFragment may still works in this fragment;
+        // TODO: but be covered below.
+
         initView(view);
         initData();
         return view;
@@ -187,4 +183,6 @@ public class FriendsFragment extends Fragment {
             });
         }
     }
+
+
 }
