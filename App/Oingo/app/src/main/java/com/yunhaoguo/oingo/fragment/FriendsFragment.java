@@ -10,11 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -39,15 +35,6 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-/*
- * 项目名:     Oingo
- * 包名:      com.yunhaoguo.oingo.fragment
- * 文件名:     FriendsFragment
- * 创建者:     yunhaoguo
- * 创建时间:    2018/12/5 11:39 PM
- * 描述:      TODO
- */
 
 
 public class FriendsFragment extends Fragment {

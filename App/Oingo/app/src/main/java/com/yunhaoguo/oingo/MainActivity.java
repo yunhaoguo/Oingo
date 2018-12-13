@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         // Change the status bar color to fit the theme.
         getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         setContentView(R.layout.activity_main);
-        //去掉阴影
         if (getSupportActionBar() != null) {
             getSupportActionBar().setElevation(0);
         }
@@ -85,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout = findViewById(R.id.my_tab_layout);
         mViewPager = findViewById(R.id.my_view_pager);
 
-        //预加载
         mViewPager.setOffscreenPageLimit(mFragments.size());
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -104,22 +102,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //设置适配器
+
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
 
-            //选中的Item
+
             @Override
             public Fragment getItem(int position) {
                 return mFragments.get(position);
             }
 
-            //返回Item的个数
             @Override
             public int getCount() {
                 return mFragments.size();
             }
 
-            //设置TabLayout标题
             @Nullable
             @Override
             public CharSequence getPageTitle(int position) {
@@ -127,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //绑定
         mTabLayout.setupWithViewPager(mViewPager);
 
 

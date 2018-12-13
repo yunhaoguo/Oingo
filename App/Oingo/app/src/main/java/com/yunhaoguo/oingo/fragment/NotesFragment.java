@@ -38,14 +38,6 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-/*
- * 项目名:     Oingo
- * 包名:      com.yunhaoguo.oingo.fragment
- * 文件名:     NotesFragment
- * 创建者:     yunhaoguo
- * 创建时间:    2018/12/5 11:28 PM
- * 描述:      TODO
- */
 
 
 public class NotesFragment extends Fragment {
@@ -142,7 +134,6 @@ public class NotesFragment extends Fragment {
                 // TODO: Start profile activity here.
                 break;
             case R.id.logout_action:
-                // TODO: Maybe need to erase the data in AccountUtil.
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 break;
         }
