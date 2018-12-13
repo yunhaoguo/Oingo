@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.FriendRequestsActivity"></activity>
+        <activity android:name=".activity.FriendRequestsActivity" />
+        <activity android:name=".activity.NoteDetailActivity"></activity>
     </application>
 
 </manifest>

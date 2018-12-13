@@ -9,6 +9,8 @@ package com.yunhaoguo.oingo.utils;
  */
 
 
+import com.yunhaoguo.oingo.entity.Comment;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,7 +85,6 @@ public class QueryUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
         Request request = new Request.Builder().url(HttpUtils.GET_REQUESTSLIST_URL + "?uid=" + uid).build();
         client.newCall(request).enqueue(callback);
     }
@@ -101,6 +102,33 @@ public class QueryUtils {
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
         Request request = new Request.Builder().url(HttpUtils.GET_REQUESTSLIST_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void getNoteDetail(int nid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("nid", nid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Request request = new Request.Builder().url(HttpUtils.GET_COMMENTSLIST_URL + "?nid=" + nid).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void addComment(Comment comment, int nid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("uid", AccountUtils.getUid());
+            obj.put("nid", nid);
+            obj.put("ctime", comment.getCtime());
+            obj.put("ccontent", comment.getCcontent());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.GET_COMMENTSLIST_URL).post(requestBody).build();
         client.newCall(request).enqueue(callback);
     }
 

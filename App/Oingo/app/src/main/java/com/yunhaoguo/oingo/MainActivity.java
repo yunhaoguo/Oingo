@@ -49,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int uid = intent.getIntExtra("uid", -1);
+        String uname = intent.getStringExtra("uname");
         AccountUtils.setUid(uid);
+        AccountUtils.setUname(uname);
         mTitles = new ArrayList<>();
         mTitles.add("Notes");
         mTitles.add("Friends");

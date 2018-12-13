@@ -16,4 +16,5 @@ public class HttpUtils {
     public static final String GET_FRIENDLIST_URL = INITIAL_URL + "friends";
     public static final String GET_NOTESLIST_URL = INITIAL_URL + "notes";
     public static final String GET_REQUESTSLIST_URL = INITIAL_URL + "requests";
+    public static final String GET_COMMENTSLIST_URL = INITIAL_URL + "comments";
 }

@@ -1,6 +1,7 @@
 package db;
 
 
+import bean.Comment;
 import bean.Note;
 import bean.User;
 import utils.DateUtils;
@@ -37,25 +38,28 @@ public class MySQLConnection implements DBConnection{
 
 
 	@Override
-	public int verifyLogin(String userName, String password) {
+	public User verifyLogin(String userName, String password) {
         if (conn == null) {
-            return -1;
+            return new User();
         }
         try {
-            String sql = "SELECT uid FROM User WHERE binary uname = ? AND binary upassword = ?";
+            String sql = "SELECT * FROM User WHERE binary uname = ? AND binary upassword = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, userName);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
-            } else {
-                return -1;
+                User user = new User();
+                user.setUid(rs.getInt("uid"));
+                user.setUname(rs.getString("uname"));
+                user.setUstate(rs.getString("ustate"));
+                user.setUemail(rs.getString("uemail"));
+                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+        return new User();
     }
 
     @Override
@@ -187,6 +191,64 @@ public class MySQLConnection implements DBConnection{
                 insertStmt.setInt(1, ruid);
                 insertStmt.setInt(2, uid);
                 if (insertStmt.executeUpdate() != 1) {
+                    return false;
+                }
+            } else {
+                //reject
+                //do nothing
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    public List<Comment> getCommentsList(int nid) {
+        List<Comment> commentsList = new ArrayList<>();
+        if (conn == null) {
+            return commentsList;
+        }
+        try {
+            String sql = "SELECT * FROM Comment NATURAL JOIN  User WHERE nid = ? ORDER BY ctime asc";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, nid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Comment comment = new Comment();
+                comment.setUid(rs.getInt("uid"));
+                comment.setUname(rs.getString("uname"));
+                comment.setCcontent(rs.getString("ccontent"));
+                String date = rs.getDate("ctime").toString();
+                String time = rs.getTime("ctime").toString();
+                String datetime = date.split(" ")[0] + " " + time;
+                String resultdatetime = DateUtils.date2String29(DateUtils.str2Date(datetime));
+                comment.setCtime(resultdatetime);
+                System.out.println(resultdatetime);
+                commentsList.add(comment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return commentsList;
+    }
+
+    @Override
+    public boolean addComment(Comment comment) {
+        if (conn == null) {
+            return false;
+        }
+        try {
+            if (comment != null) {
+                String insertSql = "INSERT INTO Comment(uid, nid, ctime, ccontent) VALUES (?, ?, ?, ?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, comment.getUid());
+                insertStmt.setInt(2, comment.getNid());
+                insertStmt.setString(3, comment.getCtime());
+                insertStmt.setString(4, comment.getCcontent());
+                int insertRow = insertStmt.executeUpdate();
+                if (insertRow != 1) {
                     return false;
                 }
             } else {
