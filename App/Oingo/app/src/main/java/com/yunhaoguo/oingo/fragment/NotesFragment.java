@@ -1,18 +1,28 @@
 package com.yunhaoguo.oingo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.yunhaoguo.oingo.MainActivity;
 import com.yunhaoguo.oingo.R;
+import com.yunhaoguo.oingo.activity.FilterActivity;
+import com.yunhaoguo.oingo.activity.LoginActivity;
 import com.yunhaoguo.oingo.adapter.NoteListAdapter;
 import com.yunhaoguo.oingo.entity.Note;
 import com.yunhaoguo.oingo.utils.QueryUtils;
@@ -52,6 +62,14 @@ public class NotesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, null);
+
+        // Add tool bar at the top.
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.notes_toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        // Explicitly call onCreateOptionsMenu() callback
+        // This happens because the activity call this method before build the fragment.
+        setHasOptionsMenu(true);
+
         initData();
         initView(view);
         return view;
@@ -92,5 +110,30 @@ public class NotesFragment extends Fragment {
         rvNoteList.setAdapter(noteListAdapter);
 
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filter_action:
+                Intent intent = new Intent(getActivity(), FilterActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.profile_action:
+                Toast.makeText(getActivity(), "PROFILE.", Toast.LENGTH_SHORT).show();
+                // TODO: Start profile activity here.
+                break;
+            case R.id.logout_action:
+                // TODO: Maybe need to erase the data in AccountUtil.
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

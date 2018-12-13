@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 
+
 import com.yunhaoguo.oingo.fragment.FriendsFragment;
 import com.yunhaoguo.oingo.fragment.NotesFragment;
 import com.yunhaoguo.oingo.utils.AccountUtils;
@@ -33,9 +34,15 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvNoteList;
 
     private List<String> noteList;
+
+    // ---- ----
+    // private Toolbar mToolbar
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // TODO: May be add this setting to every activity.
+        // Change the status bar color to fit the theme.
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         setContentView(R.layout.activity_main);
         //去掉阴影
         if (getSupportActionBar() != null) {
@@ -120,4 +127,5 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 }

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.CreateFilterActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/create_filter_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:theme="@style/Theme.Design"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="80dp">
+
+        <!-- Filter Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Filter Name: "/>
+            <EditText
+                android:id="@+id/et_fname"
+                android:hint="Pick a name for this filter."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+        <!-- Dummy location: Longitude, Latitude -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="Location: "/>
+            <EditText
+                android:id="@+id/et_flocation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="format: Lon, Lag"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="Radius: "/>
+            <EditText
+                android:id="@+id/et_fradius"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="location's radius"/>
+        </LinearLayout>
+
+        <!-- Date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="From: "/>
+            <EditText
+                android:id="@+id/et_fstart_date"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:hint="Date"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:text="Select"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="To: "/>
+            <EditText
+                android:id="@+id/et_fend_date"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:hint="Date"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Select"/>
+        </LinearLayout>
+
+
+        <!-- Time Selection -->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="From: "/>
+            <EditText
+                android:id="@+id/et_fstart_time"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:hint="Time"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:text="Select"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="To: "/>
+            <EditText
+                android:id="@+id/et_fend_time"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:hint="Time"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Select"/>
+        </LinearLayout>
+
+        <!-- From_Friend -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="Only receive notes from friends? "/>
+
+            <CheckBox android:id="@+id/cbx_from_friend"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:checked="false"/>
+        </LinearLayout>
+
+        <!-- Submit Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="50dp">
+            <Button
+                android:id="@+id/btn_cancel_create_filter"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:text="Cancel"/>
+            <Button
+                android:id="@+id/btn_finish_create_filter"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:text="Finish"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
