@@ -21,30 +21,30 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
 
     public FilterListAdapter(Context context, List<String> filterNameList, List<List<String>> filterAttrList) {
         this.context = context;
-        this.filterNameList = new ArrayList<>();
-        this.filterAttrList = new ArrayList<>();
-//        this.filterNameList = filterNameList;
-//        this.filterAttrList = filterAttrList;
+//        this.filterNameList = new ArrayList<>();
+//        this.filterAttrList = new ArrayList<>();
+        this.filterNameList = filterNameList;
+        this.filterAttrList = filterAttrList;
 
-        List<String> list1 = new ArrayList<>();
-        list1.add("11");
-        list1.add("11");
-        list1.add("11");
-        List<String> list2 = new ArrayList<>();
-        list2.add("22");
-        list2.add("22");
-        list2.add("22");
-        List<String> list3 = new ArrayList<>();
-        list3.add("33");
-        list3.add("33");
-        list3.add("33");
-        this.filterAttrList.add(list1);
-        this.filterAttrList.add(list2);
-        this.filterAttrList.add(list3);
-
-        this.filterNameList.add("1");
-        this.filterNameList.add("2");
-        this.filterNameList.add("3");
+//        List<String> list1 = new ArrayList<>();
+//        list1.add("11");
+//        list1.add("11");
+//        list1.add("11");
+//        List<String> list2 = new ArrayList<>();
+//        list2.add("22");
+//        list2.add("22");
+//        list2.add("22");
+//        List<String> list3 = new ArrayList<>();
+//        list3.add("33");
+//        list3.add("33");
+//        list3.add("33");
+//        this.filterAttrList.add(list1);
+//        this.filterAttrList.add(list2);
+//        this.filterAttrList.add(list3);
+//
+//        this.filterNameList.add("1");
+//        this.filterNameList.add("2");
+//        this.filterNameList.add("3");
 
     }
 
@@ -132,9 +132,8 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
     }
 
     public void updateData(List<String> updatedNameList, List<List<String>> updatedAttrList) {
-        // TODO: substitute the list with the new one.
-        // this.filterNameList = updatedNameList;
-        // this.filterAttrList = updatedAttrList;
-        // notifyDataSetChanged();
+        this.filterNameList = updatedNameList;
+        this.filterAttrList = updatedAttrList;
+        notifyDataSetChanged();
     }
 }

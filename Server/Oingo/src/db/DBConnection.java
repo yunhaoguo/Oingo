@@ -75,4 +75,6 @@ public interface DBConnection {
 
 	public int deleteNote(int nid);
 
+	List<Note> getFilteredNoteList(int fid);
+
 }

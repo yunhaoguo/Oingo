@@ -558,4 +558,52 @@ public class MySQLConnection implements DBConnection{
         return filterList;
     }
 
+    @Override
+    public List<Note> getFilteredNoteList(int fid) {
+        List<Note> noteList = new ArrayList<>();
+        if (conn == null) {
+            return noteList;
+        }
+        try {
+            // Original get
+            // String sql = "SELECT uid, uname, nid, ncontent, allow_comment, nstarttime, nrepeat_type, nendtime, ST_AsText(nlocation) as loc FROM Note NATURAL JOIN User ORDER BY nstarttime desc";
+            String sql = "SELECT Note.uid as uid, User.uname as uname, Note.nid as nid, Note.ncontent as ncontent, Note.allow_comment as allow_comment, " +
+                         "Note.nstarttime as nstarttime, Note.nrepeat_type as nrepeat_type, Note.nendtime as nendtime, ST_AsText(nlocation) as loc " +
+                         "FROM Note, Filter, User WHERE Note.uid=Filter.uid AND Filter.fid = ? AND Note.uid=User.uid" +
+                         "checkDoubleRadiusDistance(Filter.flocation, Note.nlocation, Filter.fradius, Note.nradius) AND" +
+                         "checkTimeOverlapping(Filter.fstarttime, Filter.fendtime, Note.nstarttime, Note.nendtime, Note.nrepeat_type)";
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Note note = new Note();
+                note.setUid(rs.getInt("uid"));
+                note.setUname(rs.getString("uname"));
+                note.setNid(rs.getInt("nid"));
+                note.setNcontent(rs.getString("ncontent"));
+                note.setAllowComment(rs.getInt("allow_comment"));
+
+                Date time1=new Date(rs.getTimestamp("nstarttime").getTime());
+                SimpleDateFormat formattime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String ctime=formattime.format(time1);
+                String resultdatetimeS = DateUtils.date2String5(DateUtils.str2Date(ctime));
+                note.setStartTime(resultdatetimeS);
+
+                Date time2=new Date(rs.getTimestamp("nendtime").getTime());
+                SimpleDateFormat formattime2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String ctime2=formattime2.format(time2);
+                String resultdatetimeE = DateUtils.date2String5(DateUtils.str2Date(ctime2));
+                note.setEndTime(resultdatetimeE);
+
+                String point = rs.getString("loc");
+                int pointLen = point.length();
+                note.setNlocation(point.substring(6,pointLen - 1));
+                note.setRepeatType(rs.getString("nrepeat_type"));
+                noteList.add(note);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return noteList;
+    }
 }

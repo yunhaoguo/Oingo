@@ -25,12 +25,11 @@ public class NotesServlet extends HttpServlet {
         try {
             boolean isFilter = input.getBoolean("is_filter");
             if (isFilter) {
-                int uid = input.getInt("uid");
-                String fstarttime = input.getString("fstarttime");
-                String fendtime = input.getString("fendtime");
-                String[] point = input.getString("flocation").split(",");
-                double radius = input.getDouble("fradius");
-                boolean from_friend = input.getBoolean("from_friend");
+                int fid = input.getInt("fid");
+                List<Note> noteList = connection.getFilteredNoteList(fid);
+                String noteListStr = gson.toJson(noteList);
+                RpcHelper.writeJsonObject(response, new JSONObject().put("result", noteListStr));
+
             } else {
                 List<Note> noteList = connection.getAllNoteList();
                 String noteListStr = gson.toJson(noteList);
