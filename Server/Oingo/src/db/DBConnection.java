@@ -68,7 +68,11 @@ public interface DBConnection {
 
 	public int addNote(Note note);
 
+
 	int createFilter(Filter filter);
 
 	List<Filter> getFilterList(int uid);
+
+	public int deleteNote(int nid);
+
 }

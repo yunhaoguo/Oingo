@@ -1,11 +1,13 @@
 package com.yunhaoguo.oingo.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,19 +18,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yunhaoguo.oingo.R;
-import com.yunhaoguo.oingo.activity.AddNoteActivity;
 import com.yunhaoguo.oingo.activity.FilterActivity;
 import com.yunhaoguo.oingo.activity.LoginActivity;
+import com.yunhaoguo.oingo.activity.MapActivity;
 import com.yunhaoguo.oingo.activity.NoteDetailActivity;
 import com.yunhaoguo.oingo.activity.ProfileActivity;
 import com.yunhaoguo.oingo.adapter.NoteListAdapter;
 import com.yunhaoguo.oingo.entity.Note;
 import com.yunhaoguo.oingo.utils.AccountUtils;
 import com.yunhaoguo.oingo.utils.QueryUtils;
+import com.yunhaoguo.oingo.utils.ShareUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,12 +122,70 @@ public class NotesFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        noteListAdapter.setOnItemLongClickListener(new NoteListAdapter.ItemLongClickListener() {
+            @Override
+            public void onItemLongClick(final int position) {
+                AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("Are you sure to delete this note?")
+                        .setNegativeButton("cancel", null).setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        if (noteList.get(position).getUid() != AccountUtils.getUid()) {
+                                            Toast.makeText(getActivity(), "Sorry, it is not your note, you have no permission to delete it", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            deleteNote(noteList.get(position).getNid());
+                                        }
+                                        break;
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                        break;
+                                }
+                            }
+                        }).create();
+                dialog.show();
+            }
+        });
         srlNoteList = view.findViewById(R.id.srl_note_list);
         srlNoteList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 initData();
                 srlNoteList.setRefreshing(false);
+            }
+        });
+    }
+
+    private void deleteNote(int nid) {
+        QueryUtils.deleteNote(nid, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject responseObj = new JSONObject(response.body().string());
+                    if (responseObj.getInt("result") == 1) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getActivity(), "delete success", Toast.LENGTH_SHORT).show();
+                                initData();
+                            }
+                        });
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getActivity(), "delete failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -137,8 +199,8 @@ public class NotesFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_note_action:
-                Intent intent = new Intent(getActivity(), AddNoteActivity.class);
+            case R.id.map_view_action:
+                Intent intent = new Intent(getActivity(), MapActivity.class);
                 startActivity(intent);
                 break;
             case R.id.filter_action:
@@ -152,6 +214,7 @@ public class NotesFragment extends Fragment {
                 startActivity(intent);
                 break;
             case R.id.logout_action:
+                ShareUtils.putBoolean(getActivity(), "firstopen", true);
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
                 break;

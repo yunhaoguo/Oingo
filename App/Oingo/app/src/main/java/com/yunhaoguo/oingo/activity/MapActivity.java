@@ -19,8 +19,23 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yunhaoguo.oingo.R;
+import com.yunhaoguo.oingo.entity.Note;
 import com.yunhaoguo.oingo.utils.PermissionUtils;
+import com.yunhaoguo.oingo.utils.QueryUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationClickListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraIdleListener {
 
@@ -43,14 +58,58 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Marker marker;
     private LatLng mLatLng;
 
+    private List<Note> noteList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
         initView();
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private void initData() {
+        QueryUtils.getNotesList(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject responseObj = new JSONObject(response.body().string());
+                    Gson gson = new Gson();
+                    noteList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<Note>>() {
+                    }.getType());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            addMarkersOnMap(noteList);
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void addMarkersOnMap(List<Note> noteList) {
+        List<LatLng> latLngList = new ArrayList<>();
+        for (Note note : noteList) {
+            String[] latlng = note.getNlocation().split(" ");
+            latLngList.add(new LatLng(Double.parseDouble(latlng[0]), Double.parseDouble(latlng[1])));
+        }
+        for (int i = 0; i < noteList.size(); i++) {
+            mMap.addMarker(new MarkerOptions()
+            .position(latLngList.get(i))
+            .title(noteList.get(i).getNcontent())
+            .snippet(noteList.get(i).getUname())
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        }
     }
 
     private void initView() {
@@ -82,6 +141,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
         enableMyLocation();
+        initData();
+
     }
 
     /**
@@ -109,7 +170,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
     }
 
     @Override

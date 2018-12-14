@@ -204,6 +204,7 @@ public class QueryUtils {
         client.newCall(request).enqueue(callback);
     }
 
+<<<<<<< HEAD
     public static void createFilter(Filter filter, Callback callback) {
         Gson gson = new Gson();
         String filterStr = gson.toJson(filter, Filter.class);
@@ -217,11 +218,21 @@ public class QueryUtils {
         JSONObject obj = new JSONObject();
         try {
             obj.put("uid", AccountUtils.getUid());
+=======
+    public static void deleteNote(int nid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("nid", nid);
+>>>>>>> ff5ca0dc0af9f2ce4f06ad1ddf2f966ad3abbb02
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+<<<<<<< HEAD
         Request request = new Request.Builder().url(HttpUtils.GET_FILTERLIST_URL).post(requestBody).build();
+=======
+        Request request = new Request.Builder().url(HttpUtils.DELETE_NOTE_URL).post(requestBody).build();
+>>>>>>> ff5ca0dc0af9f2ce4f06ad1ddf2f966ad3abbb02
         client.newCall(request).enqueue(callback);
     }
 }

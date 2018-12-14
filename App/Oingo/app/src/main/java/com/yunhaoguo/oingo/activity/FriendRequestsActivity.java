@@ -75,7 +75,7 @@ public class FriendRequestsActivity extends AppCompatActivity {
 
     private void initView() {
 
-        Toolbar toolbar = findViewById(R.id.filter_toolbar);
+        Toolbar toolbar = findViewById(R.id.requests_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
