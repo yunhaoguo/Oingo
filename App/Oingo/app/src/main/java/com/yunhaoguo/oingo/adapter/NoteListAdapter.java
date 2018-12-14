@@ -45,6 +45,13 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
                 listener.onItemClick((int)v.getTag());
             }
         });
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                longClickListener.onItemLongClick((int)v.getTag());
+                return true;
+            }
+        });
         return viewHolder;
     }
 
@@ -83,6 +90,17 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
 
     public void setOnItemClickListener(ItemClickListener listener) {
         this.listener = listener;
+    }
+
+
+    public interface ItemLongClickListener {
+        void onItemLongClick(int position);
+    }
+
+    private ItemLongClickListener longClickListener;
+
+    public void setOnItemLongClickListener(ItemLongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
     }
 
 }

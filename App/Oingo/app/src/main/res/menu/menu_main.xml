@@ -5,8 +5,8 @@
 
     <!-- Settings, should always be in the overflow -->
     <item
-        android:id="@+id/add_note_action"
-        android:title="Add note"
+        android:id="@+id/map_view_action"
+        android:title="Map View"
         app:showAsAction="never"/>
 
     <item

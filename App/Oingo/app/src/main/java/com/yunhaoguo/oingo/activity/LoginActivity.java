@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +16,7 @@ import com.yunhaoguo.oingo.MainActivity;
 import com.yunhaoguo.oingo.R;
 import com.yunhaoguo.oingo.entity.User;
 import com.yunhaoguo.oingo.utils.QueryUtils;
+import com.yunhaoguo.oingo.utils.ShareUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,8 +67,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_login:
                 String name = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                Log.i("name", name);
-                Log.i("password", password);
                 verify(name, password);
                 break;
             case R.id.tv_forget_password:
@@ -95,6 +93,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     User user = gson.fromJson(responseObj.getString("result"), User.class);
                     if (user.getUid() != 0) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        ShareUtils.putInt(LoginActivity.this, "uid", user.getUid());
+                        ShareUtils.putString(LoginActivity.this, "uname", user.getUname());
+                        ShareUtils.putString(LoginActivity.this, "uemail", user.getUemail());
+                        ShareUtils.putString(LoginActivity.this, "ustate", user.getUstate());
                         intent.putExtra("uid", user.getUid());
                         intent.putExtra("uname", user.getUname());
                         intent.putExtra("uemail", user.getUemail());

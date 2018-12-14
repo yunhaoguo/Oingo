@@ -65,8 +65,9 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initView() {
 
-        Toolbar toolbar = findViewById(R.id.filter_toolbar);
+        Toolbar toolbar = findViewById(R.id.add_note_toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Add Note");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

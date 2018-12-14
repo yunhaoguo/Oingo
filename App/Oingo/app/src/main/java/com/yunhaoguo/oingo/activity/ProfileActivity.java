@@ -77,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void initView() {
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.filter_toolbar);
+        Toolbar toolbar = findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

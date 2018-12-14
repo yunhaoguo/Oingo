@@ -66,4 +66,6 @@ public interface DBConnection {
 	public int deleteFriend(int uid, int fuid);
 
 	public int addNote(Note note);
+
+	public int deleteNote(int nid);
 }

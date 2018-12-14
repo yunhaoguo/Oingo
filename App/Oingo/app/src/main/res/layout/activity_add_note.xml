@@ -2,15 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.CreateFilterActivity">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/filter_toolbar"
+        android:id="@+id/add_note_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="?android:attr/colorPrimary"
         android:elevation="4dp"
+        toolbar:title="Add note"
+        app:titleTextColor="@color/white"
         app:theme="@style/Theme.Design"
         app:navigationIcon="@drawable/ic_arrow_back"
         />

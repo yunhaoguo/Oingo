@@ -120,7 +120,7 @@ public class MySQLConnection implements DBConnection{
             return noteList;
         }
         try {
-            String sql = "SELECT * FROM Note NATURAL JOIN User ORDER BY nstarttime desc";
+            String sql = "SELECT uid, uname, nid, ncontent, allow_comment, nstarttime, nrepeat_type, nendtime, ST_AsText(nlocation) as loc FROM Note NATURAL JOIN User ORDER BY nstarttime desc";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -143,6 +143,9 @@ public class MySQLConnection implements DBConnection{
                 String resultdatetimeE = DateUtils.date2String5(DateUtils.str2Date(ctime2));
                 note.setEndTime(resultdatetimeE);
 
+                String point = rs.getString("loc");
+                int pointLen = point.length();
+                note.setNlocation(point.substring(6,pointLen - 1));
                 note.setRepeatType(rs.getString("nrepeat_type"));
                 noteList.add(note);
             }
@@ -350,13 +353,22 @@ public class MySQLConnection implements DBConnection{
             if (rs.next()) {
                 return false;
             } else {
-                String insertSql = "INSERT INTO Request(from_uid, to_uid) VALUES (?, ?)";
-                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
-                insertStmt.setInt(1, uid);
-                insertStmt.setInt(2, fuid);
-                int insertRow = insertStmt.executeUpdate();
-                if (insertRow != 1) {
+                String sql2 = "SELECT * FROM Request WHERE from_uid = ? and to_uid = ?";
+                PreparedStatement stmt2 = conn.prepareStatement(sql2);
+                stmt2.setInt(1, fuid);
+                stmt2.setInt(2, uid);
+                ResultSet rs2 = stmt.executeQuery();
+                if (rs.next()) {
                     return false;
+                } else {
+                    String insertSql = "INSERT INTO Request(from_uid, to_uid) VALUES (?, ?)";
+                    PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                    insertStmt.setInt(1, uid);
+                    insertStmt.setInt(2, fuid);
+                    int insertRow = insertStmt.executeUpdate();
+                    if (insertRow != 1) {
+                        return false;
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -444,6 +456,25 @@ public class MySQLConnection implements DBConnection{
                 //do nothing
             }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    @Override
+    public int deleteNote(int nid) {
+        if (conn == null) {
+            return 0;
+        }
+        try {
+            String deleteSql = "DELETE FROM Note WHERE nid = ?";
+            PreparedStatement deleteStmt1 = conn.prepareStatement(deleteSql);
+            deleteStmt1.setInt(1, nid);
+            int deleteRow = deleteStmt1.executeUpdate();
+            if (deleteRow != 1) {
+                return 0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

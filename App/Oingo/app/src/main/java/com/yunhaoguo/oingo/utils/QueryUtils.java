@@ -203,4 +203,15 @@ public class QueryUtils {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void deleteNote(int nid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("nid", nid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.DELETE_NOTE_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
 }
