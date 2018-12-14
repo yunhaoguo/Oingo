@@ -15,6 +15,9 @@
         app:theme="@style/Theme.Design"
         app:navigationIcon="@drawable/ic_arrow_back"
         />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
     <LinearLayout
@@ -43,7 +46,7 @@
         </LinearLayout>
 
 
-        <!-- Dummy location: Longitude, Latitude -->
+        <!-- Location -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,11 +58,27 @@
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
                 android:text="Location: "/>
-            <EditText
-                android:id="@+id/et_flocation"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="format: Lon, Lag"/>
+                android:gravity="start">
+                <EditText
+                    android:id="@+id/et_flocation"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center_vertical"
+                    android:text=""
+                    android:enabled="false"
+                    android:maxLines="1"/>
+
+                <ImageView
+                    android:id="@+id/iv_fopen_map"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_add_location" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -96,11 +115,17 @@
                 android:id="@+id/et_fstart_date"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
+                android:text=""
+                android:enabled="false"
+                android:maxLines="1"
                 android:hint="Date"/>
             <Button
+                android:id="@+id/btn_ffrom_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
                 android:text="Select"/>
 
         </LinearLayout>
@@ -121,10 +146,16 @@
                 android:id="@+id/et_fend_date"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
+                android:text=""
+                android:enabled="false"
+                android:maxLines="1"
                 android:hint="Date"/>
             <Button
+                android:id="@+id/btn_fto_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
                 android:text="Select"/>
         </LinearLayout>
 
@@ -147,11 +178,17 @@
                 android:id="@+id/et_fstart_time"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
+                android:text=""
+                android:enabled="false"
+                android:maxLines="1"
                 android:hint="Time"/>
             <Button
+                android:id="@+id/btn_ffrom_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
                 android:text="Select"/>
 
         </LinearLayout>
@@ -171,10 +208,16 @@
                 android:id="@+id/et_fend_time"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
+                android:text=""
+                android:enabled="false"
+                android:maxLines="1"
                 android:hint="Time"/>
             <Button
+                android:id="@+id/btn_fto_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
                 android:text="Select"/>
         </LinearLayout>
 
@@ -213,16 +256,19 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="20dp"
+                android:textColor="@color/colorPrimary"
                 android:text="Cancel"/>
             <Button
                 android:id="@+id/btn_finish_create_filter"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
+                android:textColor="@color/colorPrimary"
                 android:text="Finish"/>
         </LinearLayout>
 
     </LinearLayout>
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

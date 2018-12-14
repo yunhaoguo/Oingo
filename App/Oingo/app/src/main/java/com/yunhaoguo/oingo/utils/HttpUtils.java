@@ -21,4 +21,7 @@ public class HttpUtils {
     public static final String ADD_FRIEND_URL = INITIAL_URL + "addfriend";
     public static final String EDIT_INFO_URL = INITIAL_URL + "editinfo";
     public static final String ADD_NOTE_URL = INITIAL_URL + "addnote";
+
+    public static final String CREATE_FILTER_URL = INITIAL_URL + "createfilter";
+    public static final String GET_FILTERLIST_URL = INITIAL_URL + "filters";
 }

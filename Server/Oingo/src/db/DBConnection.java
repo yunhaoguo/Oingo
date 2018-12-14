@@ -2,6 +2,7 @@ package db;
 
 
 import bean.Comment;
+import bean.Filter;
 import bean.Note;
 import bean.User;
 
@@ -66,4 +67,8 @@ public interface DBConnection {
 	public int deleteFriend(int uid, int fuid);
 
 	public int addNote(Note note);
+
+	int createFilter(Filter filter);
+
+	List<Filter> getFilterList(int uid);
 }

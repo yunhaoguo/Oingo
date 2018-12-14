@@ -1,11 +1,11 @@
-package com.yunhaoguo.oingo.entity;
+package bean;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-public class Filter implements Serializable {
-    // Primary Key; Auto_increment by DB
+/**
+ * project: Oingo
+ *
+ * @author Yubai Tao on 12/14/2018
+ */
+public class Filter {
     private int fid;
     private int uid;
     private String fname;
@@ -13,8 +13,8 @@ public class Filter implements Serializable {
     private String fendtime;
     private String flocation;
     private int fradius;
+    private String fstate;
     private int from_friend;
-
 
     public int getFid() {
         return fid;
@@ -32,7 +32,6 @@ public class Filter implements Serializable {
         this.uid = uid;
     }
 
-
     public String getFname() {
         return fname;
     }
@@ -45,8 +44,8 @@ public class Filter implements Serializable {
         return fstarttime;
     }
 
-    public void setFstarttime(String fstarttime) {
-        this.fstarttime = fstarttime;
+    public void setFstarttime(String fstartTime) {
+        this.fstarttime = fstartTime;
     }
 
     public String getFendtime() {
@@ -73,23 +72,19 @@ public class Filter implements Serializable {
         this.fradius = fradius;
     }
 
+    public String getFstate() {
+        return fstate;
+    }
+
+    public void setFstate(String fstate) {
+        this.fstate = fstate;
+    }
+
     public int getFrom_friend() {
         return from_friend;
     }
 
     public void setFrom_friend(int from_friend) {
         this.from_friend = from_friend;
-    }
-
-    public List<String> getAttributes() {
-        List<String> attrs = new ArrayList<>();
-        attrs.add(fname);
-        attrs.add(flocation);
-        attrs.add(String.valueOf(fradius));
-        attrs.add(fstarttime);
-        attrs.add(fendtime);
-        attrs.add(from_friend == 0? "No" : "Yes");
-
-        return attrs;
     }
 }

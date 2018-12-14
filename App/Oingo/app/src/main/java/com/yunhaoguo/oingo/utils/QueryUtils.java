@@ -11,6 +11,7 @@ package com.yunhaoguo.oingo.utils;
 
 import com.google.gson.Gson;
 import com.yunhaoguo.oingo.entity.Comment;
+import com.yunhaoguo.oingo.entity.Filter;
 import com.yunhaoguo.oingo.entity.Note;
 
 import org.json.JSONException;
@@ -203,4 +204,24 @@ public class QueryUtils {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void createFilter(Filter filter, Callback callback) {
+        Gson gson = new Gson();
+        String filterStr = gson.toJson(filter, Filter.class);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), filterStr);
+        Request request = new Request.Builder().url(HttpUtils.CREATE_FILTER_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void getFilterList(Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("uid", AccountUtils.getUid());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.GET_FILTERLIST_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
 }

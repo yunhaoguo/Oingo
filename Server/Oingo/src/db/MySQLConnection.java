@@ -2,6 +2,7 @@ package db;
 
 
 import bean.Comment;
+import bean.Filter;
 import bean.Note;
 import bean.User;
 import utils.DateUtils;
@@ -448,5 +449,80 @@ public class MySQLConnection implements DBConnection{
             e.printStackTrace();
         }
         return 1;
+    }
+
+    @Override
+    public int createFilter(Filter filter) {
+        if (conn == null) {
+            return 0;
+        }
+        try {
+            if (filter != null) {
+                String insertSql = "INSERT INTO filter(uid, fname, fstarttime, fendtime, flocation, fradius, fstate, from_friend)" +
+                        " VALUES (?, ?, ?, ?, point(?, ?), ?, ?, ?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, filter.getUid());
+                insertStmt.setString(2, filter.getFname());
+                insertStmt.setString(3, filter.getFstarttime());
+                insertStmt.setString(4, filter.getFendtime());
+                insertStmt.setDouble(5, Double.parseDouble(filter.getFlocation().split(",")[0]));
+                insertStmt.setDouble(6, Double.parseDouble(filter.getFlocation().split(",")[1]));
+                insertStmt.setInt(7, filter.getFradius());
+                insertStmt.setString(8, null); // filter.getFstate();
+                insertStmt.setInt(9, filter.getFrom_friend());
+
+                int insertRow = insertStmt.executeUpdate();
+                if (insertRow != 1) {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    @Override
+    public List<Filter> getFilterList(int uid) {
+        List<Filter> filterList = new ArrayList<>();
+        if (conn == null) {
+            return new ArrayList<>();
+        }
+        try {
+            String sql = "SELECT * FROM filter WHERE uid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, uid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Filter filter = new Filter();
+                filter.setFid(rs.getInt("fid"));
+                filter.setUid(rs.getInt("uid"));
+                filter.setFname(rs.getString("fname"));
+
+                Date starttime = new Date(rs.getTimestamp("fstarttime").getTime());
+                Date endtime = new Date(rs.getTimestamp("fendtime").getTime());
+                SimpleDateFormat formattime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String starttime_s = formattime.format(starttime);
+                String endtime_s = formattime.format(endtime);
+                String fstarttime = DateUtils.date2String5(DateUtils.str2Date(starttime_s));
+                String fendtime = DateUtils.date2String5(DateUtils.str2Date(endtime_s));
+
+                
+                filter.setFstarttime(fstarttime);
+                filter.setFendtime(fendtime);
+                filter.setFradius(rs.getInt("fradius"));
+                filter.setFstate(rs.getString("fstate") == null ? "" : rs.getString("fstate")); // Can be null
+                filter.setFrom_friend(rs.getInt("from_friend"));
+
+
+                filterList.add(filter);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return filterList;
     }
 }

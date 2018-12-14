@@ -15,15 +15,17 @@ import java.util.List;
 
 public class FilterListAdapter extends BaseExpandableListAdapter {
 
-    private final Context context;
-    private final LayoutInflater layoutInflater;
-    private final List<String> filterNameList = new ArrayList<>();
-    private final List<List<String>> filterList = new ArrayList<>();
+    private Context context;
+    private List<String> filterNameList;
+    private List<List<String>> filterAttrList;
 
-    public FilterListAdapter(Context context, List<List<Integer>> ThefilterList) {
+    public FilterListAdapter(Context context, List<String> filterNameList, List<List<String>> filterAttrList) {
         this.context = context;
-        this.layoutInflater = LayoutInflater.from(context);
-        // this.filterList = filterList;
+        this.filterNameList = new ArrayList<>();
+        this.filterAttrList = new ArrayList<>();
+//        this.filterNameList = filterNameList;
+//        this.filterAttrList = filterAttrList;
+
         List<String> list1 = new ArrayList<>();
         list1.add("11");
         list1.add("11");
@@ -36,34 +38,34 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
         list3.add("33");
         list3.add("33");
         list3.add("33");
-        filterList.add(list1);
-        filterList.add(list2);
-        filterList.add(list3);
+        this.filterAttrList.add(list1);
+        this.filterAttrList.add(list2);
+        this.filterAttrList.add(list3);
 
-        filterNameList.add("1");
-        filterNameList.add("2");
-        filterNameList.add("3");
+        this.filterNameList.add("1");
+        this.filterNameList.add("2");
+        this.filterNameList.add("3");
 
     }
 
     @Override
     public int getGroupCount() {
-        return filterList.size();
+        return filterNameList.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return filterList.get(groupPosition).size() + 1;
+        return filterAttrList.get(groupPosition).size() + 1;
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return filterList.get(groupPosition);
+        return filterAttrList.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return filterList.get(groupPosition).get(childPosition);
+        return filterAttrList.get(groupPosition).get(childPosition);
     }
 
     @Override
@@ -108,7 +110,7 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
         if (!isLastChild) {
-            childViewHolder.tvTitle.setText(filterList.get(groupPosition).get(childPosition));
+            childViewHolder.tvTitle.setText(filterAttrList.get(groupPosition).get(childPosition));
         } else {
             childViewHolder.tvTitle.setText(R.string.app_name);
             // childViewHolder.tvTitle.setTextColor(Color.BLACK);
@@ -127,5 +129,12 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
 
     static class ChildViewHolder {
         TextView tvTitle;
+    }
+
+    public void updateData(List<String> updatedNameList, List<List<String>> updatedAttrList) {
+        // TODO: substitute the list with the new one.
+        // this.filterNameList = updatedNameList;
+        // this.filterAttrList = updatedAttrList;
+        // notifyDataSetChanged();
     }
 }
