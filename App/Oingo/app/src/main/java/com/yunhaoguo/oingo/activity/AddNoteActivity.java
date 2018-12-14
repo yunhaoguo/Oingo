@@ -51,6 +51,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     private EditText etLocation;
     private CheckBox cbAllowComment;
     private RadioGroup rgRepeatType;
+    private EditText etTag;
 
     private Button btnPublish;
 
@@ -129,7 +130,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
-
+        etTag = findViewById(R.id.et_tag);
         btnPublish = findViewById(R.id.btn_publish_note);
         btnPublish.setOnClickListener(this);
 
@@ -165,7 +166,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
         if (TextUtils.isEmpty(etContent.getText().toString()) || TextUtils.isEmpty(etLocation.getText().toString())
                 || TextUtils.isEmpty(etRadius.getText().toString()) || TextUtils.isEmpty(etFromDate.getText().toString())
                 || TextUtils.isEmpty(etToDate.getText().toString()) || TextUtils.isEmpty(etToTime.getText().toString())
-                || TextUtils.isEmpty(etFromTime.getText().toString())) {
+                || TextUtils.isEmpty(etFromTime.getText().toString()) || TextUtils.isEmpty(etTag.getText().toString())) {
             Toast.makeText(this, "You have empty field", Toast.LENGTH_SHORT).show();
         } else {
             Note note = new Note();
@@ -177,6 +178,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
             note.setNlocation(etLocation.getText().toString());
             note.setRepeatType(repeatType);
             note.setNradius(Integer.parseInt(etRadius.getText().toString()));
+            note.setNtag(etTag.getText().toString());
             QueryUtils.addNote(note, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {

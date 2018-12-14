@@ -74,13 +74,7 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_expand_group , parent, false);
             groupViewHolder = new GroupViewHolder();
             groupViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.label_expand_group);
-//            groupViewHolder.btnDelete = convertView.findViewById(R.id.btn_delete_filter);
-//            groupViewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    listener.onItemClick(groupPosition);
-//                }
-//            });
+
             convertView.setTag(groupViewHolder);
         } else {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
@@ -123,12 +117,6 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
         TextView tvTitle;
     }
 
-//<<<<<<< HEAD
-//    public void updateData(List<String> updatedNameList, List<List<String>> updatedAttrList) {
-//        this.filterNameList = updatedNameList;
-//        this.filterAttrList = updatedAttrList;
-//        notifyDataSetChanged();
-//=======
     public void updateData(List<Integer> updatedIdList, List<String> updatedNameList, List<List<String>> updatedAttrList) {
         // TODO: substitute the list with the new one.
         this.filterIdList = updatedIdList;

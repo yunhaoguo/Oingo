@@ -83,12 +83,13 @@ public class Filter implements Serializable {
 
     public List<String> getAttributes() {
         List<String> attrs = new ArrayList<>();
-        attrs.add(fname);
-        attrs.add(flocation);
-        attrs.add(String.valueOf(fradius));
-        attrs.add(fstarttime);
-        attrs.add(fendtime);
-        attrs.add(from_friend == 0? "No" : "Yes");
+        attrs.add("Filter Name: " +fname);
+        attrs.add("Filter Location: " + flocation);
+        attrs.add("Filter Radius: " + String.valueOf(fradius));
+        attrs.add("Filter starttime: " +fstarttime);
+        attrs.add("Filter endtime: " + fendtime);
+        String fromfriend = from_friend == 0 ? "No" : "Yes";
+        attrs.add("From friend: " + fromfriend);
 
         return attrs;
     }

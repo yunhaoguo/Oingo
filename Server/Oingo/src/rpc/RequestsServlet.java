@@ -26,6 +26,7 @@ public class RequestsServlet extends HttpServlet {
         try {
             int uid = input.getInt("uid");
             int ruid = input.getInt("ruid");
+            System.out.println(uid + " " + ruid + "ididi");
             int accept = input.getInt("accept");
             if (connection.updateRequestsList(uid, ruid, accept)) {
                 RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));

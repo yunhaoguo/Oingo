@@ -359,7 +359,7 @@ public class MySQLConnection implements DBConnection{
                 stmt2.setInt(1, fuid);
                 stmt2.setInt(2, uid);
                 ResultSet rs2 = stmt.executeQuery();
-                if (rs.next()) {
+                if (rs2.next()) {
                     return false;
                 } else {
                     String insertSql = "INSERT INTO Request(from_uid, to_uid) VALUES (?, ?)";
@@ -449,9 +449,46 @@ public class MySQLConnection implements DBConnection{
                 insertStmt.setString(9, note.getEndTime());
                 insertStmt.setString(10, note.getRepeatType());
                 int insertRow = insertStmt.executeUpdate();
-                if (insertRow != 1) {
+                    if (insertRow != 1) {
                     return 0;
                 }
+
+                String insertSql5 = "SELECT max(nid) as max FROM Note";
+                PreparedStatement stmt5 = conn.prepareStatement(insertSql5);
+                ResultSet rs5 = stmt5.executeQuery();
+                int nid = 0;
+                if (rs5.next()) {
+                    nid = rs5.getInt("max");
+                }
+
+
+                String insertSql2 = "INSERT INTO Tag(tname) VALUES (?)";
+                PreparedStatement insertStmt2 = conn.prepareStatement(insertSql2);
+                insertStmt2.setString(1, note.getNtag());
+                int insertRow2 = insertStmt2.executeUpdate();
+                if (insertRow2 != 1) {
+                    return 0;
+                }
+
+                String insertSql3 = "SELECT max(tid) as max FROM Tag";
+                PreparedStatement stmt3 = conn.prepareStatement(insertSql3);
+                ResultSet rs3 = stmt3.executeQuery();
+                int tid = 0;
+                if (rs3.next()) {
+                    tid = rs3.getInt("max");
+                }
+
+                String insertSql4 = "INSERT INTO ContainsTags(nid, tid)" +
+                        " VALUES (?, ?)";
+                PreparedStatement stmt4 = conn.prepareStatement(insertSql4);
+                stmt4.setInt(1, nid);
+                stmt4.setInt(2, tid);
+                int insertRow4 = stmt4.executeUpdate();
+                if (insertRow4 != 1) {
+                    return 0;
+                }
+
+
             } else {
                 return 0;
                 //do nothing
@@ -544,7 +581,7 @@ public class MySQLConnection implements DBConnection{
             return new ArrayList<>();
         }
         try {
-            String sql = "SELECT * FROM filter WHERE uid = ?";
+            String sql = "SELECT fid, uid, fname, fstarttime, fendtime, fradius, fstate, from_friend, ST_AsText(flocation) as loc FROM filter WHERE uid = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, uid);
             ResultSet rs = stmt.executeQuery();
@@ -561,8 +598,10 @@ public class MySQLConnection implements DBConnection{
                 String endtime_s = formattime.format(endtime);
                 String fstarttime = DateUtils.date2String5(DateUtils.str2Date(starttime_s));
                 String fendtime = DateUtils.date2String5(DateUtils.str2Date(endtime_s));
-
-                
+                String point = rs.getString("loc");
+                int pointLen = point.length();
+                filter.setFlocation(point.substring(6,pointLen - 1));
+                System.out.println(filter.getFlocation());
                 filter.setFstarttime(fstarttime);
                 filter.setFendtime(fendtime);
                 filter.setFradius(rs.getInt("fradius"));
@@ -589,11 +628,12 @@ public class MySQLConnection implements DBConnection{
             // String sql = "SELECT uid, uname, nid, ncontent, allow_comment, nstarttime, nrepeat_type, nendtime, ST_AsText(nlocation) as loc FROM Note NATURAL JOIN User ORDER BY nstarttime desc";
             String sql = "SELECT Note.uid as uid, User.uname as uname, Note.nid as nid, Note.ncontent as ncontent, Note.allow_comment as allow_comment, " +
                          "Note.nstarttime as nstarttime, Note.nrepeat_type as nrepeat_type, Note.nendtime as nendtime, ST_AsText(nlocation) as loc " +
-                         "FROM Note, Filter, User WHERE Note.uid=Filter.uid AND Filter.fid = ? AND Note.uid=User.uid" +
-                         "checkDoubleRadiusDistance(Filter.flocation, Note.nlocation, Filter.fradius, Note.nradius) AND" +
+                         "FROM Note, Filter, User WHERE Note.uid=Filter.uid AND Filter.fid = ? AND Note.uid=User.uid AND " +
+                         "checkDoubleRadiusDistance(Filter.flocation, Note.nlocation, Filter.fradius, Note.nradius) AND " +
                          "checkTimeOverlapping(Filter.fstarttime, Filter.fendtime, Note.nstarttime, Note.nendtime, Note.nrepeat_type)";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, fid);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Note note = new Note();

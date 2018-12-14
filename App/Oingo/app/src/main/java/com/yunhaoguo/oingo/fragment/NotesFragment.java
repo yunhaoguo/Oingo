@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -120,6 +121,7 @@ public class NotesFragment extends Fragment {
                     Gson gson = new Gson();
                     noteList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<Note>>() {
                     }.getType());
+                    Log.i("notelist", noteList.get(0).getNcontent());
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

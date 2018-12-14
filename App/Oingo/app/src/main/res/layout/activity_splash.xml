@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SplashActivity">
+    tools:context=".activity.SplashActivity"
+    >
+<TextView
+    android:id="@+id/title"
+    android:text="Oingo"
+    android:textSize="60sp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:typeface="monospace"
+    />
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Find beautiful nearby"/>
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Created by Eric and The Thy"/>
+</RelativeLayout>

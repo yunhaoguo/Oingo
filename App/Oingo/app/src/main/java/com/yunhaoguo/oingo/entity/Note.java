@@ -24,6 +24,16 @@ public class Note implements Serializable{
     private String nlocation;
     private int nradius;
 
+    private String ntag;
+
+    public String getNtag() {
+        return ntag;
+    }
+
+    public void setNtag(String ntag) {
+        this.ntag = ntag;
+    }
+
     public int getNradius() {
         return nradius;
     }

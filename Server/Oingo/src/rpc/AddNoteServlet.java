@@ -29,6 +29,7 @@ public class AddNoteServlet extends HttpServlet {
                     sBuilder.append(line);
                 }
             }
+            System.out.println(sBuilder.toString());
             Note note = gson.fromJson(sBuilder.toString(), Note.class);
             int result = connection.addNote(note);
             RpcHelper.writeJsonObject(response, new JSONObject().put("result", result));

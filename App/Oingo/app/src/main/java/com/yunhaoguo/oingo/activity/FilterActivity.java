@@ -41,6 +41,7 @@ public class FilterActivity extends AppCompatActivity {
     private EditText etInputDelete;
     private Button btnDelete;
     private Button btnAdd;
+    private Button btnClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class FilterActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_filter_action) {
-            startActivity(new Intent(FilterActivity.this, CreateFilterActivity.class));
+            startActivityForResult(new Intent(FilterActivity.this, CreateFilterActivity.class), 1);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -119,7 +120,16 @@ public class FilterActivity extends AppCompatActivity {
                 if (!TextUtils.isEmpty(etInputDelete.getText().toString())) {
                     int fposition = Integer.parseInt(etInputDelete.getText().toString());
                     AccountUtils.setFid(filterList.get(fposition - 1).getFid());
+                    Toast.makeText(FilterActivity.this, "You chose " + filterList.get(fposition - 1).getFname(), Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        btnClear = findViewById(R.id.btn_clear);
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AccountUtils.setFid(-1);
+                Toast.makeText(FilterActivity.this, "Now you cleared all the filters", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -127,12 +137,6 @@ public class FilterActivity extends AppCompatActivity {
     private void setAdapter() {
         if (adapter == null) {
             adapter = new FilterListAdapter(this, formatIdData(filterList), formatNameData(filterList), formatAttrData(filterList));
-            adapter.setOnItemClickListener(new FilterListAdapter.ItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    deleteFilter(filterList.get(position).getFid(), position);
-                }
-            });
             filterListView.setAdapter(adapter);
 
         }
@@ -204,6 +208,12 @@ public class FilterActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        setData();
+        adapter.updateData(formatIdData(filterList), formatNameData(filterList), formatAttrData(filterList));
     }
 
     private List<Integer> formatIdData(List<Filter> filters) {
