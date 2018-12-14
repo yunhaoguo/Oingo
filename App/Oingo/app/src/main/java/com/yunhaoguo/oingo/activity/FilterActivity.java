@@ -1,15 +1,14 @@
 package com.yunhaoguo.oingo.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 
-import com.yunhaoguo.oingo.MainActivity;
 import com.yunhaoguo.oingo.R;
 import com.yunhaoguo.oingo.adapter.FilterListAdapter;
 
@@ -58,8 +57,7 @@ public class FilterActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FilterActivity.this, MainActivity.class);
-                startActivity(intent);
+                finish();
                 // TODO: Send back the chosen filter
                 // TODO: Or add an global setting in AccountUtil
             }

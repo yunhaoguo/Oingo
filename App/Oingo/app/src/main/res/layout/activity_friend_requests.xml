@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.FriendRequestsActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/filter_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="4dp"
+        app:theme="@style/Theme.Design"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_friend_requests"
         android:layout_width="match_parent"

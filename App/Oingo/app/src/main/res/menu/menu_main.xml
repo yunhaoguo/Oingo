@@ -5,6 +5,11 @@
 
     <!-- Settings, should always be in the overflow -->
     <item
+        android:id="@+id/add_note_action"
+        android:title="Add note"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/filter_action"
         android:title="Filter"
         app:showAsAction="never"/>
@@ -19,6 +24,7 @@
         android:id="@+id/logout_action"
         android:title="Log out"
         app:showAsAction="never"/>
+
 
 
 </menu>

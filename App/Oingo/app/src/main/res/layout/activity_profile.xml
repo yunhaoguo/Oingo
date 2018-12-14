@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/filter_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="4dp"
+        app:theme="@style/Theme.Design"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -14,8 +24,8 @@
 
         <ImageView
             android:id="@+id/profile_image"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:src="@drawable/ic_sentiment_satisfied_black_48dp" />
 
 

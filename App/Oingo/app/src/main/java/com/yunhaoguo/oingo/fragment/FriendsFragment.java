@@ -13,7 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -45,7 +45,7 @@ public class FriendsFragment extends Fragment {
 
     private FriendListAdapter friendListAdapter;
 
-    private TextView tvFriendRequests;
+    private ImageView ivFriendRequests;
 
     private SwipeRefreshLayout srlFriendList;
 
@@ -98,8 +98,8 @@ public class FriendsFragment extends Fragment {
         });
         rvFriendList.setAdapter(friendListAdapter);
 
-        tvFriendRequests = view.findViewById(R.id.tv_friend_requests);
-        tvFriendRequests.setOnClickListener(new View.OnClickListener() {
+        ivFriendRequests = view.findViewById(R.id.iv_friend_requests);
+        ivFriendRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), FriendRequestsActivity.class));

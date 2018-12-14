@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initView() {
+
         btnRegister = findViewById(R.id.btn_register);
         btnRegister.setOnClickListener(this);
         etUsername = findViewById(R.id.et_login_username);

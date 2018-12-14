@@ -64,4 +64,6 @@ public interface DBConnection {
 	public int editInfo(int uid, String uname, String uemail, String ustate);
 
 	public int deleteFriend(int uid, int fuid);
+
+	public int addNote(Note note);
 }

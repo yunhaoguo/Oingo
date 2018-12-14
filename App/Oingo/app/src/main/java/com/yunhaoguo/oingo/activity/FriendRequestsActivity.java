@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -72,6 +74,16 @@ public class FriendRequestsActivity extends AppCompatActivity {
     }
 
     private void initView() {
+
+        Toolbar toolbar = findViewById(R.id.filter_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         rvRequests = findViewById(R.id.rv_friend_requests);
         rvRequests.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         requestsListAdapter = new RequestsListAdapter(requestsList);

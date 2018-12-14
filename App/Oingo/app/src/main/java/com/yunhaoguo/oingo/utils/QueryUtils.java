@@ -9,7 +9,9 @@ package com.yunhaoguo.oingo.utils;
  */
 
 
+import com.google.gson.Gson;
 import com.yunhaoguo.oingo.entity.Comment;
+import com.yunhaoguo.oingo.entity.Note;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -190,6 +192,14 @@ public class QueryUtils {
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
         Request request = new Request.Builder().url(HttpUtils.GET_USERINFO_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void addNote(Note note, Callback callback) {
+        Gson gson = new Gson();
+        String noteStr = gson.toJson(note, Note.class);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), noteStr);
+        Request request = new Request.Builder().url(HttpUtils.ADD_NOTE_URL).post(requestBody).build();
         client.newCall(request).enqueue(callback);
     }
 

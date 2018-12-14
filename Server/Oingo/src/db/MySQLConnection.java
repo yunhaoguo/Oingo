@@ -120,7 +120,7 @@ public class MySQLConnection implements DBConnection{
             return noteList;
         }
         try {
-            String sql = "SELECT * FROM Note NATURAL JOIN User";
+            String sql = "SELECT * FROM Note NATURAL JOIN User ORDER BY nstarttime desc";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -129,9 +129,20 @@ public class MySQLConnection implements DBConnection{
                 note.setUname(rs.getString("uname"));
                 note.setNid(rs.getInt("nid"));
                 note.setNcontent(rs.getString("ncontent"));
-                note.setAllowComment(rs.getInt("allow_comment") == 1);
-                note.setStartTime(DateUtils.date2String(rs.getDate("nstarttime")));
-                note.setEndTime(DateUtils.date2String(rs.getDate("nendtime")));
+                note.setAllowComment(rs.getInt("allow_comment"));
+
+                Date time1=new Date(rs.getTimestamp("nstarttime").getTime());
+                SimpleDateFormat formattime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String ctime=formattime.format(time1);
+                String resultdatetimeS = DateUtils.date2String5(DateUtils.str2Date(ctime));
+                note.setStartTime(resultdatetimeS);
+
+                Date time2=new Date(rs.getTimestamp("nendtime").getTime());
+                SimpleDateFormat formattime2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String ctime2=formattime2.format(time2);
+                String resultdatetimeE = DateUtils.date2String5(DateUtils.str2Date(ctime2));
+                note.setEndTime(resultdatetimeE);
+
                 note.setRepeatType(rs.getString("nrepeat_type"));
                 noteList.add(note);
             }
@@ -244,18 +255,27 @@ public class MySQLConnection implements DBConnection{
         }
         try {
             if (comment != null) {
-                String insertSql = "INSERT INTO Comment(uid, nid, ctime, ccontent) VALUES (?, ?, ?, ?)";
-                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
-                insertStmt.setInt(1, comment.getUid());
-                insertStmt.setInt(2, comment.getNid());
-                insertStmt.setString(3, comment.getCtime());
-                insertStmt.setString(4, comment.getCcontent());
-                int insertRow = insertStmt.executeUpdate();
-                if (insertRow != 1) {
-                    return false;
+                String sql = "SELECT allow_comment FROM Note WHERE nid = ?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setInt(1, comment.getNid());
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    if (rs.getInt("allow_comment") == 1) {
+                        String insertSql = "INSERT INTO Comment(uid, nid, ctime, ccontent) VALUES (?, ?, ?, ?)";
+                        PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                        insertStmt.setInt(1, comment.getUid());
+                        insertStmt.setInt(2, comment.getNid());
+                        insertStmt.setString(3, comment.getCtime());
+                        insertStmt.setString(4, comment.getCcontent());
+                        int insertRow = insertStmt.executeUpdate();
+                        if (insertRow != 1) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
                 }
             } else {
-                //reject
                 //do nothing
             }
 
@@ -389,6 +409,41 @@ public class MySQLConnection implements DBConnection{
             if (deleteRow2 != 1) {
                 return 0;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    @Override
+    public int addNote(Note note) {
+        if (conn == null) {
+            return 0;
+        }
+        try {
+            if (note != null) {
+                String insertSql = "INSERT INTO Note(uid, ncontent, nlocation, nradius, nimage, allow_comment, nstarttime, nendtime, nrepeat_type)" +
+                        " VALUES (?, ?, point(?, ?), ?, ?, ?, ? ,? ,?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, note.getUid());
+                insertStmt.setString(2, note.getNcontent());
+                insertStmt.setDouble(3, Double.parseDouble(note.getNlocation().split(",")[0]));
+                insertStmt.setDouble(4, Double.parseDouble(note.getNlocation().split(",")[1]));
+                insertStmt.setInt(5, note.getNradius());
+                insertStmt.setString(6, null);
+                insertStmt.setInt(7, note.getAllowComment());
+                insertStmt.setString(8, note.getStartTime());
+                insertStmt.setString(9, note.getEndTime());
+                insertStmt.setString(10, note.getRepeatType());
+                int insertRow = insertStmt.executeUpdate();
+                if (insertRow != 1) {
+                    return 0;
+                }
+            } else {
+                return 0;
+                //do nothing
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

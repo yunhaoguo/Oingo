@@ -2,6 +2,7 @@ package com.yunhaoguo.oingo.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -74,6 +75,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initView() {
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.filter_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         tvEditProfile = findViewById(R.id.tv_edit_profile);
         etName = findViewById(R.id.et_me_username);
         etEmail = findViewById(R.id.et_me_email);

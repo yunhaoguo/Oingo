@@ -52,7 +52,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.tvNoteContent.setText(mData.get(position).getNcontent());
         holder.tvFrom.setText(mData.get(position).getUname());
-        holder.tvDate.setText(mData.get(position).getStartTime());
+        holder.tvFromDate.setText(mData.get(position).getStartTime());
         holder.itemView.setTag(position);
     }
 
@@ -65,13 +65,13 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
 
         TextView tvNoteContent;
         TextView tvFrom;
-        TextView tvDate;
+        TextView tvFromDate;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvNoteContent = itemView.findViewById(R.id.tv_note_item);
             tvFrom = itemView.findViewById(R.id.tv_from);
-            tvDate = itemView.findViewById(R.id.tv_start_date);
+            tvFromDate = itemView.findViewById(R.id.tv_start_date);
         }
     }
 

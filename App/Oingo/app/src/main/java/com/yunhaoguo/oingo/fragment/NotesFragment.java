@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,16 +16,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yunhaoguo.oingo.R;
+import com.yunhaoguo.oingo.activity.AddNoteActivity;
 import com.yunhaoguo.oingo.activity.FilterActivity;
 import com.yunhaoguo.oingo.activity.LoginActivity;
 import com.yunhaoguo.oingo.activity.NoteDetailActivity;
+import com.yunhaoguo.oingo.activity.ProfileActivity;
 import com.yunhaoguo.oingo.adapter.NoteListAdapter;
 import com.yunhaoguo.oingo.entity.Note;
+import com.yunhaoguo.oingo.utils.AccountUtils;
 import com.yunhaoguo.oingo.utils.QueryUtils;
 
 import org.json.JSONException;
@@ -48,7 +51,7 @@ public class NotesFragment extends Fragment {
 
     private RecyclerView rvNoteList;
 
-
+    private SwipeRefreshLayout srlNoteList;
 
     @Nullable
     @Override
@@ -110,10 +113,19 @@ public class NotesFragment extends Fragment {
                 intent.putExtra("nstarttime", note.getStartTime());
                 intent.putExtra("nuname", note.getUname());
                 intent.putExtra("nuid", note.getUid());
+                intent.putExtra("nendtime", note.getEndTime());
+                intent.putExtra("nrepeattype", note.getRepeatType());
                 startActivity(intent);
             }
         });
-
+        srlNoteList = view.findViewById(R.id.srl_note_list);
+        srlNoteList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+                srlNoteList.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -125,16 +137,23 @@ public class NotesFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.add_note_action:
+                Intent intent = new Intent(getActivity(), AddNoteActivity.class);
+                startActivity(intent);
+                break;
             case R.id.filter_action:
-                Intent intent = new Intent(getActivity(), FilterActivity.class);
+                intent = new Intent(getActivity(), FilterActivity.class);
                 startActivity(intent);
                 break;
             case R.id.profile_action:
-                Toast.makeText(getActivity(), "PROFILE.", Toast.LENGTH_SHORT).show();
                 // TODO: Start profile activity here.
+                intent = new Intent(getActivity(), ProfileActivity.class);
+                intent.putExtra("uid", AccountUtils.getUid());
+                startActivity(intent);
                 break;
             case R.id.logout_action:
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="80dp"
     android:gravity="center">
+
     <android.support.v7.widget.CardView
         app:cardElevation="1dp"
         app:cardCornerRadius="8dp"
@@ -26,19 +27,19 @@
                 android:layout_height="match_parent"
                 android:layout_weight="6"
                 android:gravity="center"/>
-            <Button
-                android:id="@+id/btn_reject_requests"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/ic_close_black_48dp"/>
-            <Button
-                android:id="@+id/btn_accept_requests"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/ic_done_black_48dp"/>
+                <Button
+                    android:id="@+id/btn_reject_requests"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/ic_close_black_48dp"/>
+                <Button
+                    android:id="@+id/btn_accept_requests"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/ic_done_black_48dp"/>
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

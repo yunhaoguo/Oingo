@@ -8,10 +8,32 @@ public class Note {
     private String uname;
     private String ncontent;
     private String imageUrl;
-    private boolean allowComment;
+    private int allowComment;
     private String startTime;
     private String endTime;
     private String repeatType;
+    private String nlocation;
+    private int nradius;
+
+    public int getNradius() {
+        return nradius;
+    }
+
+    public void setNradius(int nradius) {
+        this.nradius = nradius;
+    }
+
+    public int getAllowComment() {
+        return allowComment;
+    }
+
+    public String getNlocation() {
+        return nlocation;
+    }
+
+    public void setNlocation(String nlocation) {
+        this.nlocation = nlocation;
+    }
 
     public int getNid() {
         return nid;
@@ -53,11 +75,7 @@ public class Note {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isAllowComment() {
-        return allowComment;
-    }
-
-    public void setAllowComment(boolean allowComment) {
+    public void setAllowComment(int allowComment) {
         this.allowComment = allowComment;
     }
 

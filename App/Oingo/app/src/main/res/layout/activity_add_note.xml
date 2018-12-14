@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.CreateFilterActivity">
-
     <android.support.v7.widget.Toolbar
-        android:id="@+id/create_filter_toolbar"
+        android:id="@+id/filter_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="?android:attr/colorPrimary"
@@ -15,35 +14,41 @@
         app:theme="@style/Theme.Design"
         app:navigationIcon="@drawable/ic_arrow_back"
         />
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="80dp">
-
-        <!-- Filter Name -->
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="80dp"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp">
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Filter Name: "/>
+                android:text="Note content: "/>
             <EditText
-                android:id="@+id/et_fname"
-                android:hint="Pick a name for this filter."
+                android:id="@+id/et_note_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="90dp"
+                android:hint="limit 100 words"
+                android:padding="5dp"
+                android:minLines="5"
+                android:gravity="top"
+                android:background="@drawable/edittext_background"
+                android:maxLength="500"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
         </LinearLayout>
 
 
-        <!-- Dummy location: Longitude, Latitude -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,12 +60,31 @@
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
                 android:text="Location: "/>
-            <EditText
-                android:id="@+id/et_flocation"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="format: Lon, Lag"/>
+                android:gravity="start">
+                <EditText
+                    android:id="@+id/et_location"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center_vertical"
+                    android:text=""
+                    android:enabled="false"
+                    android:maxLines="1"/>
+
+                <ImageView
+                    android:id="@+id/iv_open_map"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_add_location_black_48dp" />
+            </LinearLayout>
+
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,12 +96,15 @@
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
-                android:text="Radius: "/>
+                android:text="Radius(m): "/>
+
+
             <EditText
-                android:id="@+id/et_fradius"
+                android:id="@+id/et_nradius"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="location's radius"/>
+                android:hint="radius can be seen"
+                android:inputType="number"/>
         </LinearLayout>
 
         <!-- Date -->
@@ -92,15 +119,21 @@
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
                 android:text="From: "/>
+
             <EditText
-                android:id="@+id/et_fstart_date"
+                android:id="@+id/et_nstart_date"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:hint="Date"/>
+                android:hint="Date"
+                android:inputType="none"
+                android:enabled="false"/>
             <Button
+                android:id="@+id/btn_select_from_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
                 android:text="Select"/>
 
         </LinearLayout>
@@ -118,13 +151,18 @@
                 android:gravity="start|center_vertical"
                 android:text="To: "/>
             <EditText
-                android:id="@+id/et_fend_date"
+                android:id="@+id/et_nend_date"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:hint="Date"/>
+                android:hint="Date"
+                android:inputType="none"
+                android:enabled="false"/>
             <Button
+                android:id="@+id/btn_select_to_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
                 android:text="Select"/>
         </LinearLayout>
 
@@ -144,14 +182,19 @@
                 android:gravity="start|center_vertical"
                 android:text="From: "/>
             <EditText
-                android:id="@+id/et_fstart_time"
+                android:id="@+id/et_nstart_time"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:hint="Time"/>
+                android:hint="Time"
+                android:inputType="none"
+                android:enabled="false"/>
             <Button
+                android:id="@+id/btn_select_from_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
                 android:text="Select"/>
 
         </LinearLayout>
@@ -168,17 +211,83 @@
                 android:gravity="start|center_vertical"
                 android:text="To: "/>
             <EditText
-                android:id="@+id/et_fend_time"
+                android:id="@+id/et_nend_time"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:hint="Time"/>
+                android:hint="Time"
+                android:inputType="none"
+                android:enabled="false"/>
             <Button
+                android:id="@+id/btn_select_to_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
                 android:text="Select"/>
         </LinearLayout>
 
-        <!-- From_Friend -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Repeat type:"
+                android:gravity="start|center_vertical"/>
+            <RadioGroup
+                android:id="@+id/rg_repeat_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RadioButton
+                    android:id="@+id/rb_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Every day"
+                    android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/rb_sun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sunday"/>
+                <RadioButton
+                    android:id="@+id/rb_mon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monday"/>
+                <RadioButton
+                    android:id="@+id/rb_tue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tuesday"/>
+                <RadioButton
+                    android:id="@+id/rb_wed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wednesday"/>
+                <RadioButton
+                    android:id="@+id/rb_thu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thursday"/>
+                <RadioButton
+                    android:id="@+id/rb_fri"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Friday"/>
+                <RadioButton
+                    android:id="@+id/rb_sat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Saturday"/>
+
+            </RadioGroup>
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -190,39 +299,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
-                android:text="Only receive notes from friends? "/>
+                android:text="Do you allow others to comment? "/>
 
-            <CheckBox android:id="@+id/cbx_from_friend"
+            <CheckBox android:id="@+id/cbx_allow_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:checked="false"/>
         </LinearLayout>
 
-        <!-- Submit Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="10dp">
             <Button
-                android:id="@+id/btn_cancel_create_filter"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="20dp"
-                android:text="Cancel"/>
-            <Button
-                android:id="@+id/btn_finish_create_filter"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:text="Finish"/>
+                android:id="@+id/btn_publish_note"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:gravity="center"
+                android:text="Publish"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"/>
         </LinearLayout>
 
+
     </LinearLayout>
-
-
-</android.support.constraint.ConstraintLayout>
+</ScrollView>
+</RelativeLayout>

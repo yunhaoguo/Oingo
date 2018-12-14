@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -43,6 +44,8 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     private TextView tvNoteContent;
     private TextView tvNoteUName;
     private TextView tvNoteTime;
+    private TextView tvNoteEndTime;
+    private TextView tvNoteRepeatType;
     private LinearLayout llFriendProfile;
 
 
@@ -51,6 +54,8 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     private String noteContent;
     private String noteUname;
     private String noteTime;
+    private String noteEndTime;
+    private String noteRepeatType;
 
     private List<Comment> commentsList = new ArrayList<>();
     private RecyclerView rvCommentsList;
@@ -73,10 +78,23 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initView() {
+        Toolbar toolbar = findViewById(R.id.note_detail_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         tvNoteContent = findViewById(R.id.tv_note_item);
         tvNoteContent.setText(noteContent);
         tvNoteTime = findViewById(R.id.tv_start_date);
         tvNoteTime.setText(noteTime);
+        tvNoteEndTime = findViewById(R.id.tv_end_date);
+        tvNoteEndTime.setText(noteEndTime);
+        tvNoteRepeatType = findViewById(R.id.tv_repeat_type);
+        tvNoteRepeatType.setText(noteRepeatType);
         tvNoteUName = findViewById(R.id.tv_from);
         tvNoteUName.setText(noteUname);
         llFriendProfile = findViewById(R.id.ll_friend_profile);
@@ -202,6 +220,8 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
         noteTime = intent.getStringExtra("nstarttime");
         noteUname = intent.getStringExtra("nuname");
         nuid = intent.getIntExtra("nuid", -1);
+        noteEndTime = intent.getStringExtra("nendtime");
+        noteRepeatType = intent.getStringExtra("nrepeattype");
 
     }
 
@@ -248,8 +268,6 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
             comment.setUname(AccountUtils.getUname());
             comment.setCtime(DateUtils.getCurrentTime());
             comment.setNid(noteid);
-            commentsList.add(comment);
-            commentListAdapter.updateData(commentsList);
             etContent.setText("");
             insertDatabase(comment);
 
@@ -258,7 +276,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-    private void insertDatabase(Comment comment) {
+    private void insertDatabase(final Comment comment) {
         QueryUtils.addComment(comment, noteid, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -273,6 +291,8 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                commentsList.add(comment);
+                                commentListAdapter.updateData(commentsList);
                                 Toast.makeText(getApplicationContext(), "comment success！", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -280,7 +300,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(), "comment failed！", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "This note does not allow comment", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

@@ -15,7 +15,7 @@
             android:id="@+id/my_view_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -27,8 +27,8 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/my_tab_layout"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/colorAccent"
-                app:tabSelectedTextColor="@color/colorAccent"
+                app:tabIndicatorColor="@color/colorPrimary"
+                app:tabSelectedTextColor="@color/colorPrimary"
                 app:tabMode="fixed"
                 app:tabTextColor="@android:color/black"
 
@@ -39,14 +39,6 @@
                 android:layout_width="1dp"
                 android:layout_height="40dp"
                 android:background="@color/gray"/>
-            <ImageView
-                android:id="@+id/iv_my_profile"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:src="@drawable/ic_person_black_48dp"
-                android:text="me"/>
         </LinearLayout>
 
 
