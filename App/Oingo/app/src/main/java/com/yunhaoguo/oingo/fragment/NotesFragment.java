@@ -69,9 +69,41 @@ public class NotesFragment extends Fragment {
         // This happens because the activity call this method before build the fragment.
         setHasOptionsMenu(true);
 
-        initData();
+        if (AccountUtils.getFid() == -1) {
+            initData();
+        } else {
+            initData(AccountUtils.getFid());
+        }
         initView(view);
         return view;
+    }
+
+    private void initData(int fid) {
+        QueryUtils.getFilteredNotesList(fid, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject responseObj = new JSONObject(response.body().string());
+                    Gson gson = new Gson();
+                    noteList = gson.fromJson(responseObj.getString("result"), new TypeToken<List<Note>>() {
+                    }.getType());
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            noteListAdapter.updateData(noteList);
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -150,7 +182,11 @@ public class NotesFragment extends Fragment {
         srlNoteList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initData();
+                if (AccountUtils.getFid() != -1) {
+                    initData(AccountUtils.getFid());
+                } else {
+                    initData();
+                }
                 srlNoteList.setRefreshing(false);
             }
         });

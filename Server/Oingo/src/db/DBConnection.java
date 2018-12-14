@@ -77,4 +77,6 @@ public interface DBConnection {
 
 	List<Note> getFilteredNoteList(int fid);
 
+	int deleteFilter(int fid);
+
 }

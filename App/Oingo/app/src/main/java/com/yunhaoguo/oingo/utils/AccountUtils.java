@@ -13,6 +13,15 @@ public class AccountUtils {
 
     private static int uid = -1;
     private static String uname = "";
+    private static int fid = -1;
+
+    public static int getFid() {
+        return fid;
+    }
+
+    public static void setFid(int fid) {
+        AccountUtils.fid = fid;
+    }
 
     public static String getUname() {
         return uname;
