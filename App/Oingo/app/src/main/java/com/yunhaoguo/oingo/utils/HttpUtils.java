@@ -27,5 +27,6 @@ public class HttpUtils {
     public static final String GET_FILTERLIST_URL = INITIAL_URL + "filters";
 
     public static final String DELETE_NOTE_URL = INITIAL_URL + "deletenote";
+    public static final String DELETE_FILTER_URL = INITIAL_URL + "deletefilter";
 
 }

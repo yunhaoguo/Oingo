@@ -516,6 +516,26 @@ public class MySQLConnection implements DBConnection{
         return 1;
     }
 
+    @Override
+    public int deleteFilter(int fid) {
+        if (conn == null) {
+            return 0;
+        }
+        try {
+            System.out.println("delete" + fid);
+            String deleteSql = "DELETE FROM Filter WHERE fid = ?";
+            PreparedStatement deleteStmt1 = conn.prepareStatement(deleteSql);
+            deleteStmt1.setInt(1, fid);
+            int deleteRow = deleteStmt1.executeUpdate();
+            if (deleteRow != 1) {
+                return 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
 
     @Override
     public List<Filter> getFilterList(int uid) {

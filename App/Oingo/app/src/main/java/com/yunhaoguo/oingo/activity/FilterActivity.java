@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.yunhaoguo.oingo.R;
 import com.yunhaoguo.oingo.adapter.FilterListAdapter;
 import com.yunhaoguo.oingo.entity.Filter;
+import com.yunhaoguo.oingo.utils.AccountUtils;
 import com.yunhaoguo.oingo.utils.QueryUtils;
 
 import org.json.JSONException;
@@ -33,6 +37,10 @@ public class FilterActivity extends AppCompatActivity {
     private List<Filter> filterList = new ArrayList<>();
     private ExpandableListView filterListView;
     private FilterListAdapter adapter;
+
+    private EditText etInputDelete;
+    private Button btnDelete;
+    private Button btnAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +97,83 @@ public class FilterActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        etInputDelete = findViewById(R.id.et_input_delete);
+        btnDelete = findViewById(R.id.btn_delete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(etInputDelete.getText().toString())) {
+                    int fposition = Integer.parseInt(etInputDelete.getText().toString());
+                    if (fposition <= filterList.size()) {
+                        deleteFilter(filterList.get(fposition - 1).getFid(), fposition - 1);
+                    }
+
+                }
+            }
+        });
+        btnAdd = findViewById(R.id.btn_add);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(etInputDelete.getText().toString())) {
+                    int fposition = Integer.parseInt(etInputDelete.getText().toString());
+                    AccountUtils.setFid(filterList.get(fposition - 1).getFid());
+                }
+            }
+        });
     }
 
     private void setAdapter() {
         if (adapter == null) {
-            adapter = new FilterListAdapter(this, formatNameData(filterList), formatAttrData(filterList));
+            adapter = new FilterListAdapter(this, formatIdData(filterList), formatNameData(filterList), formatAttrData(filterList));
+            adapter.setOnItemClickListener(new FilterListAdapter.ItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    deleteFilter(filterList.get(position).getFid(), position);
+                }
+            });
             filterListView.setAdapter(adapter);
+
         }
+    }
+
+    private void deleteFilter(int fid, final int position) {
+        QueryUtils.deleteFilter(fid, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject responseObj = new JSONObject(response.body().string());
+                    int res = responseObj.getInt("result");
+                    if (res == 1) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(FilterActivity.this, "delete success", Toast.LENGTH_SHORT).show();
+                                filterList.remove(position);
+                                adapter.updateData(formatIdData(filterList), formatNameData(filterList), formatAttrData(filterList));
+                            }
+                        });
+
+
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(FilterActivity.this, "delete failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void setData() {
@@ -116,7 +194,7 @@ public class FilterActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            adapter.updateData(formatNameData(filterList), formatAttrData(filterList));
+                            adapter.updateData(formatIdData(filterList), formatNameData(filterList), formatAttrData(filterList));
                         }
                     });
 
@@ -128,6 +206,13 @@ public class FilterActivity extends AppCompatActivity {
 
     }
 
+    private List<Integer> formatIdData(List<Filter> filters) {
+        List<Integer> formattedData = new ArrayList<>();
+        for (Filter filter : filters) {
+            formattedData.add(filter.getFid());
+        }
+        return formattedData;
+    }
     private List<String> formatNameData(List<Filter> filters) {
         List<String> formattedData = new ArrayList<>();
         for (Filter filter : filters) {

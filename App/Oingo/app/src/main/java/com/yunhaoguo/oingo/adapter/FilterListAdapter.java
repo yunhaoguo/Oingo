@@ -1,11 +1,11 @@
 package com.yunhaoguo.oingo.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.yunhaoguo.oingo.R;
@@ -16,35 +16,19 @@ import java.util.List;
 public class FilterListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
+
+    private List<Integer> filterIdList;
     private List<String> filterNameList;
     private List<List<String>> filterAttrList;
 
-    public FilterListAdapter(Context context, List<String> filterNameList, List<List<String>> filterAttrList) {
+    public FilterListAdapter(Context context, List<Integer> filterIdList, List<String> filterNameList, List<List<String>> filterAttrList) {
         this.context = context;
+        this.filterIdList = filterIdList;
         this.filterNameList = new ArrayList<>();
         this.filterAttrList = new ArrayList<>();
-//        this.filterNameList = filterNameList;
-//        this.filterAttrList = filterAttrList;
+        this.filterNameList = filterNameList;
+        this.filterAttrList = filterAttrList;
 
-        List<String> list1 = new ArrayList<>();
-        list1.add("11");
-        list1.add("11");
-        list1.add("11");
-        List<String> list2 = new ArrayList<>();
-        list2.add("22");
-        list2.add("22");
-        list2.add("22");
-        List<String> list3 = new ArrayList<>();
-        list3.add("33");
-        list3.add("33");
-        list3.add("33");
-        this.filterAttrList.add(list1);
-        this.filterAttrList.add(list2);
-        this.filterAttrList.add(list3);
-
-        this.filterNameList.add("1");
-        this.filterNameList.add("2");
-        this.filterNameList.add("3");
 
     }
 
@@ -84,12 +68,19 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         GroupViewHolder groupViewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_expand_group , parent, false);
             groupViewHolder = new GroupViewHolder();
             groupViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.label_expand_group);
+//            groupViewHolder.btnDelete = convertView.findViewById(R.id.btn_delete_filter);
+//            groupViewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    listener.onItemClick(groupPosition);
+//                }
+//            });
             convertView.setTag(groupViewHolder);
         } else {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
@@ -125,16 +116,29 @@ public class FilterListAdapter extends BaseExpandableListAdapter {
 
     static class GroupViewHolder {
         TextView tvTitle;
+        Button btnDelete;
     }
 
     static class ChildViewHolder {
         TextView tvTitle;
     }
 
-    public void updateData(List<String> updatedNameList, List<List<String>> updatedAttrList) {
+    public void updateData(List<Integer> updatedIdList, List<String> updatedNameList, List<List<String>> updatedAttrList) {
         // TODO: substitute the list with the new one.
-        // this.filterNameList = updatedNameList;
-        // this.filterAttrList = updatedAttrList;
-        // notifyDataSetChanged();
+        this.filterIdList = updatedIdList;
+        this.filterNameList = updatedNameList;
+        this.filterAttrList = updatedAttrList;
+        notifyDataSetChanged();
     }
+
+    public interface ItemClickListener {
+        void onItemClick(int position);
+    }
+
+    private ItemClickListener listener;
+
+    public void setOnItemClickListener(ItemClickListener listener) {
+        this.listener = listener;
+    }
+
 }

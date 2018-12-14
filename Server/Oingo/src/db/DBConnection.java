@@ -75,4 +75,5 @@ public interface DBConnection {
 
 	public int deleteNote(int nid);
 
+	int deleteFilter(int fid);
 }

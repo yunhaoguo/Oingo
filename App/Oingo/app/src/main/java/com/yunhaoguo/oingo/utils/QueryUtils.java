@@ -238,4 +238,30 @@ public class QueryUtils {
         Request request = new Request.Builder().url(HttpUtils.DELETE_NOTE_URL).post(requestBody).build();
         client.newCall(request).enqueue(callback);
     }
+
+    public static void deleteFilter(int fid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("fid", fid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.DELETE_FILTER_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void getFilteredNotesList(int fid, Callback callback) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("is_filter", true);
+            obj.put("fid", fid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        Request request = new Request.Builder().url(HttpUtils.GET_NOTESLIST_URL).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
 }
