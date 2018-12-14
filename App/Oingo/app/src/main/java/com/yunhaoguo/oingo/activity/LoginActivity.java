@@ -43,10 +43,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         initView();
+        initData();
+    }
 
+    private void initData() {
+        if (ShareUtils.getBoolean(this, "remember_pass", false)) {
+            cbRememberPass.setChecked(true);
+            etUsername.setText(ShareUtils.getString(this, "name", ""));
+            etPassword.setText(ShareUtils.getString(this, "password", ""));
+        }
     }
 
     private void initView() {
+
 
         btnRegister = findViewById(R.id.btn_register);
         btnRegister.setOnClickListener(this);
@@ -55,21 +64,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnLogin = findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
         cbRememberPass = findViewById(R.id.cb_remember_pass);
-        tvForgetPass = findViewById(R.id.tv_forget_password);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_register:
-                startActivity(new Intent(this, RegisterActivity.class));
+                startActivityForResult(new Intent(this, RegisterActivity.class), 1);
                 break;
             case R.id.btn_login:
                 String name = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
                 verify(name, password);
-                break;
-            case R.id.tv_forget_password:
                 break;
         }
     }
@@ -92,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Gson gson = new Gson();
                     User user = gson.fromJson(responseObj.getString("result"), User.class);
                     if (user.getUid() != 0) {
+                        checkRememberPass();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         ShareUtils.putInt(LoginActivity.this, "uid", user.getUid());
                         ShareUtils.putString(LoginActivity.this, "uname", user.getUname());
@@ -118,5 +125,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    private void checkRememberPass() {
+        if (cbRememberPass.isChecked()) {
+            ShareUtils.putBoolean(this, "remember_pass", true);
+            ShareUtils.putString(this, "name", etUsername.getText().toString().trim());
+            ShareUtils.putString(this, "password", etPassword.getText().toString().trim());
+        } else {
+            ShareUtils.putBoolean(this, "remember_pass", false);
+            ShareUtils.delete(this, "name");
+            ShareUtils.delete(this, "password");
+        }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null) {
+            etUsername.setText(data.getExtras().getString("name"));
+            etPassword.setText(data.getExtras().getString("password"));
+        }
+    }
 }

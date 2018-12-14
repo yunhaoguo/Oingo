@@ -50,19 +50,4 @@
         android:background="@drawable/button_bg"
         android:textColor="@android:color/white"
         android:text="Register"/>
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end">
-        <TextView
-            android:id="@+id/tv_forget_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Forget password"/>
-    </LinearLayout>
 </LinearLayout>

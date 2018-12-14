@@ -85,7 +85,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 Toast.makeText(RegisterActivity.this, "register success", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        Intent intent = new Intent();
+                        intent.putExtra("name", etUsername.getText().toString());
+                        intent.putExtra("password", etPassword.getText().toString());
+                        setResult(RESULT_OK, intent);
+                        startActivity(intent);
                         finish();
                     } else {
                         runOnUiThread(new Runnable() {
